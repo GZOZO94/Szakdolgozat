@@ -82,7 +82,7 @@ unset($_SESSION["Error"]);
 					<h4 class="modal-title">Bejelentkezés</h4>
 				</div>
 				<div class="modal-body">
-					 <form id="log_in" action="http://localhost:80/Szakdolgozat/login_database.php" method="post">
+					 <form id="log_in" action="login_database.php" method="post">
 						<div class="form-group">
 							<label for="user_name">Felhasználónév</label>
 							<input type="text" class="form-control" id="user_name" placeholder="Felhasználónév" name="user_name" required>
