@@ -88,7 +88,7 @@ while($result2=mysqli_fetch_array($res))
 								include('Ref_pictures.php');
 			echo					"</div>
 									<div class='col-sm-6'>
-										<img id='main_pic' class='img img-responsive img-thumbnail center-block' src='Uploads/Pic.jpg' alt='Pic.jpg' />
+										<img id='main_pic' class='img img-responsive img-thumbnail center-block' src='Uploads/pic.jpg' alt='pic.jpg' />
 									</div>
 								</div>
 							</div>
