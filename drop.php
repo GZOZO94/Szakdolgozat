@@ -29,12 +29,9 @@
 			}
 		if(isset($_POST["title"]) && isset($_POST["txt"]))
 		{
-			echo $_POST["title"];
-			echo $_POST["txt"];
-			echo $file;
 			$title=$_POST["title"];
 			$txt=$_POST["txt"];
-			$query=sprintf("insert into ref(text,user_id,title,prof_picture) value('%s',%d,'%s','%s')",pg_escape_string($txt),$Id,$title,pg_escape_string($file));
+			$query=sprintf("insert into ref(text,user_id,title,prof_picture) values('%s',%d,'%s','%s')",pg_escape_string($txt),$Id,$title,pg_escape_string($file));
 			pg_query($con,$query);
 		}
 ?>
