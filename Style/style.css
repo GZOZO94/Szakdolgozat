@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+body {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-attachment: fixed;
+	background-image: url('blue.jpg');
+	background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+.row-eq-height {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
