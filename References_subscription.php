@@ -17,7 +17,7 @@ echo "<div class='row well well-sm'>
 					<div class='carousel-inner' role='listbox'>";
 while($result=pg_fetch_array($res))
 {
-	if($_SESSION["ref_Id"]==$result['References_ref_id'])
+	if($_SESSION["ref_Id"]==$result['references_ref_id'])
 	{
 		if($watch==0)
 		{

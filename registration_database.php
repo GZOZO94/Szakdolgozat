@@ -18,7 +18,7 @@
 			$prof_pic="Profile.jpg";
 			if($psw2==$psw1)
 			{
-				$result=pg_query($con,"select * from user");
+				$result=pg_query($con,"select * from users");
 				while($result0=pg_fetch_array($result))
 				{
 					if($user==$result0["user_name"])
@@ -48,9 +48,9 @@
 								}
 							}
 						}
-						$query=sprintf("insert into user(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%d.%d.%d','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),$year,$month,$day, pg_escape_string($prof_pic),3);
+						$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%d.%d.%d','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),$year,$month,$day, pg_escape_string($prof_pic),3);
 						pg_query($con,$query);
-						$result=pg_query($con,"select * from user");
+						$result=pg_query($con,"select * from users");
 						while($result2=pg_fetch_array($result))
 						{
 							if($result2["user_name"]==$user && $psw1==$result2["user_password"])
