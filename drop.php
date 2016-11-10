@@ -2,11 +2,6 @@
 	session_start();
 	$Id=$_SESSION["Id"];
 	$file='pic.jpg';
-	echo $Id;
-	echo $file;
-	echo $_FILES["file"]["type"];
-	echo $_POST["title"];
-	echo $_POST["txt"];
 	if(isset($_FILES["file"]["type"]))
 		{
 			$validextensions = array("jpeg", "jpg", "png");
@@ -36,7 +31,7 @@
 		{
 			$title=$_POST["title"];
 			$txt=$_POST["txt"];
-			$query=sprintf("insert into ref(text,User_Id,title,prof_picture) value('%s',%d,'%s','%s')",$txt,$Id,$title,$file);
+			$query=sprintf("insert into ref(text,user_id,title,prof_picture) value('%s',%d,'%s','%s')",pg_escape_string($txt),$Id,$title,pg_escape_string($file));
 			pg_query($con,$query);
 		}
 ?>
