@@ -9,7 +9,7 @@ $con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5
 				echo "Error with connecting.\n";
 				exit;
 			}
-$res=pg_query($con,"select * from ref");
+$res=pg_query($con,"select * from ref order by ref_id ASC");
 while($result2=pg_fetch_array($res))
 	{		
 			$picture=$result2["prof_picture"];
@@ -43,7 +43,6 @@ while($result2=pg_fetch_array($res))
 	}
 if($rows%3!=0)
 		echo "</div>";
-	pg_close($con);
 ?>
 <script>
 $(document).ready(function(){
