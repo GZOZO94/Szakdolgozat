@@ -15,7 +15,7 @@ echo "<div class='row well well-sm'>
 			<div class='col-sm-5'>
 				<div id='Carousel' class='carousel slide' data-ride='carousel'>
 					<div class='carousel-inner' role='listbox'>";
-while($result=mysqli_fetch_array($res))
+while($result=pg_fetch_array($res))
 {
 	if($_SESSION["ref_Id"]==$result['References_ref_id'])
 	{
@@ -57,8 +57,8 @@ while($result=mysqli_fetch_array($res))
 			</div>
 			<div class='col-sm-7 well well-lg'>";
 $query=sprintf("select * from ref where ref_Id=%d",$_SESSION["ref_Id"]);
-$res=mysqli_query($con,$query);
-while($result2=mysqli_fetch_array($res))
+$res=pg_query($con,$query);
+while($result2=pg_fetch_array($res))
 	{		
 		echo "<blockquote>
 				<h4><small>".$result2["title"]."</small></h4>
