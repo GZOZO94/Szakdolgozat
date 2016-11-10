@@ -8,17 +8,11 @@
 				echo "Error with connecting.\n";
 				exit;
 			}
-	$res=pg_query($con,"select * from users");
+	$result=pg_query($con,"select * from users");
 	while($result2=pg_fetch_array($result))
 		{
-			echo $result2["Id"];
-					echo $result2["priority"];
-					echo $result2["profile_pic"];
 			if($result2["user_name"]==$user_name && $user_psw==$result2["user_password"])
 				{	
-					echo $result2["Id"];
-					echo $result2["priority"];
-					echo $result2["profile_pic"];
 					$_SESSION['Id']=$result2["Id"];
 					$eye=1;
 					$_SESSION["priority"]=$result2["priority"];
@@ -31,7 +25,5 @@
 		$_SESSION["Error"]=true;
 		$_SESSION["Id"]=NULL;
 	}
-	echo $user_name;
-	echo $user_psw;
-	/*header("Location:index.php");*/
+	header("Location:index.php");
 ?>
