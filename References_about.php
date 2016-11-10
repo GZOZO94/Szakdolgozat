@@ -10,7 +10,7 @@ $con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5
 				exit;
 			}
 $res=pg_query($con,"select * from ref");
-while($result2=pg_fetch_array($res))
+while($result2=pg_fetch_array($res,NULL,PGSQL_ASSOC))
 	{		
 			$picture=$result2["prof_picture"];
 			if($rows%3==0)
