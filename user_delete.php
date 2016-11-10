@@ -9,7 +9,7 @@
 	{
 		if(isset($_POST['Id']) && $_POST['Id']==$result['Id'])
 		{
-			$query=sprintf("delete from user where Id=%d",$_POST['Id']);
+			$query=sprintf("delete from users where \"Id\"=%d",$_POST['Id']);
 			mysqli_query($con,$query);
 			if($result['profile_pic']!='Profile.jpg')
 			{
