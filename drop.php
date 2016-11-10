@@ -22,15 +22,16 @@
 					}
 				}
 		}
-		$con=mysqli_connect("localhost", "root","")
-			or die("Kapcsolódási Hiba: ".mysqli_error($con));
-		mysqli_query($con,'SET NAMES utf8');
-		mysqli_select_db($con,"tfs");
+		$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
+			if (!$con) {
+				echo "Error with connecting.\n";
+				exit;
+			}
 		if(isset($_POST["title"]) && isset($_POST["txt"]))
 		{
 			$title=$_POST["title"];
 			$txt=$_POST["txt"];
-			$query=sprintf("insert into ref(text,User_Id,title,prof_picture) value('%s',%d,'%s','%s')",mysql_real_escape_string($txt),$Id,$title,mysql_real_escape_string($file));
-			mysqli_query($con,$query);
+			$query=sprintf("insert into ref(text,User_Id,title,prof_picture) value('%s',%d,'%s','%s')",pg_escape_string($txt),$Id,$title,pg_escape_string($file));
+			pg_query($con,$query);
 		}
 ?>

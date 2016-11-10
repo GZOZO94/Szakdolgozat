@@ -1,12 +1,13 @@
 <?php
 if(isset($_POST['pic_id']))
 {
-	$con=mysqli_connect("localhost", "root","")
-	or die("Kapcsolódási Hiba: ".mysqli_error($con));
-	mysqli_query($con,'SET NAMES utf8');
-	mysqli_select_db($con,"tfs");
-	$res=mysqli_query($con,"select * from pictures");
-	while($result=mysqli_fetch_array($res))
+	$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
+			if (!$con) {
+				echo "Error with connecting.\n";
+				exit;
+			}
+	$res=pg_query($con,"select * from pictures");
+	while($result=pg_fetch_array($res))
 	{
 		if($_POST['pic_id']==$result['pic_id'])
 		{
@@ -15,6 +16,6 @@ if(isset($_POST['pic_id']))
 		}
 	}
 	$query_data=sprintf('delete from pictures where pic_id=%d',$_POST['pic_id']);
-	mysqli_query($con,$query_data);
+	pg_query($con,$query_data);
 }
 ?>

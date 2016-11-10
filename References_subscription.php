@@ -5,11 +5,12 @@ if (session_status() == PHP_SESSION_NONE)
 	}
 $watch=0;
 $null_item=0;
-$con=mysqli_connect("localhost", "root","")
-	or die("Kapcsolódási Hiba: ".mysqli_error($con));
-mysqli_query($con,'SET NAMES utf8');
-mysqli_select_db($con,"tfs");
-$res=mysqli_query($con,"select * from pictures");
+$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
+			if (!$con) {
+				echo "Error with connecting.\n";
+				exit;
+			}
+$res=pg_query($con,"select * from pictures");
 echo "<div class='row well well-sm'>
 			<div class='col-sm-5'>
 				<div id='Carousel' class='carousel slide' data-ride='carousel'>

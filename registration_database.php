@@ -1,9 +1,10 @@
 ﻿<?php
 			$eye=0;
-			$con=mysqli_connect("localhost", "root","")
-			or die("Kapcsolódási Hiba: ".mysqli_error($con));
-			mysqli_query($con,'SET NAMES utf8');
-			mysqli_select_db($con,"tfs");
+			$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
+			if (!$con) {
+				echo "Error with connecting.\n";
+				exit;
+			}
 			$firstn=$_POST["firstn"];
 			$secondn=$_POST["secondn"];
 			$user=$_POST["user"];
@@ -17,8 +18,8 @@
 			$prof_pic="Profile.jpg";
 			if($psw2==$psw1)
 			{
-				$result=mysqli_query($con,"select * from user");
-				while($result0=mysqli_fetch_array($result))
+				$result=pg_query($con,"select * from user");
+				while($result0=pg_fetch_array($result))
 				{
 					if($user==$result0["user_name"])
 					{
@@ -47,10 +48,10 @@
 								}
 							}
 						}
-						$query=sprintf("insert into user(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%d.%d.%d','%s',%d)", mysql_real_escape_string($user), mysql_real_escape_string($psw1), mysql_real_escape_string($firstn), mysql_real_escape_string($secondn), mysql_real_escape_string($email), mysql_real_escape_string($phone),$year,$month,$day, mysql_real_escape_string($prof_pic),3);
-						mysqli_query($con,$query);
-						$result=mysqli_query($con,"select * from user");
-						while($result2=mysqli_fetch_array($result))
+						$query=sprintf("insert into user(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%d.%d.%d','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),$year,$month,$day, pg_escape_string($prof_pic),3);
+						pg_query($con,$query);
+						$result=pg_query($con,"select * from user");
+						while($result2=pg_fetch_array($result))
 						{
 							if($result2["user_name"]==$user && $psw1==$result2["user_password"])
 							{
