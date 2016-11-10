@@ -56,7 +56,7 @@ while($result=pg_fetch_array($res))
 				</a>
 			</div>
 			<div class='col-sm-7 well well-lg'>";
-$query=sprintf("select * from ref where ref_Id=%d",$_SESSION["ref_Id"]);
+$query=sprintf("select * from ref where ref_id=%d",$_SESSION["ref_Id"]);
 $res=pg_query($con,$query);
 while($result2=pg_fetch_array($res))
 	{		
