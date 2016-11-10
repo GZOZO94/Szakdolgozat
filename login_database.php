@@ -11,6 +11,9 @@
 	$res=pg_query($con,"select * from users");
 	while($result2=pg_fetch_array($result))
 		{
+			echo $result2["Id"];
+					echo $result2["priority"];
+					echo $result2["profile_pic"];
 			if($result2["user_name"]==$user_name && $user_psw==$result2["user_password"])
 				{	
 					echo $result2["Id"];
