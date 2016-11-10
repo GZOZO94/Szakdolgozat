@@ -1,9 +1,0 @@
-Téma leírása
-
-Manapság vékonykliens fejlesztéséhez aligha lehet kézenfekvőbb technológiákat találni, mint a JavaScript, HTML5, és CSS. Mivel minden modern böngészőt futtató eszköz képes ezek használatára, így platformfüggetlen kliensek készítésére alkalmasak. A legújabb HTML és CSS szabványok támogatják a változatos kijelező méreteket, így a különböző mobil és tablet eszközökön is egyszerűbb a kliens kényelmes, felhasználóbarát megjelenítése.
-
-A webes technológiák könnyebb használatához különböző keretrendszerek alakultak ki, mind a kliens, mind a szerver oldali fejlesztésekhez. Például: AngularJS, Polymer, Spring, ReactJS, RXJS…
-
-Napjainkban egy komplexebb web alkalmazásnak rengeteg adatot kell tudnia kezelni. Fontos, hogy a sok, részletes adat számára legyen elég tárhely, gyorsan rendelkezésre álljanak, és gyorsan elemezhetőek legyenek. Erre a célra is rendelkezésre állnak különböző technológiák, ilyen például a Hadoop.
-
-A feladat olyan web alkalmazások fejlesztése, amelyek során a hallgató megismerkedik a manapság használt, korszerű webes technológiákkal és az ezeket támogató keretrendszerek egy részével.
