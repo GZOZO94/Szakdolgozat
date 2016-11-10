@@ -2,6 +2,11 @@
 	session_start();
 	$Id=$_SESSION["Id"];
 	$file='pic.jpg';
+	echo $Id;
+	echo $file;
+	echo $_FILES["file"]["type"];
+	echo $_POST["title"];
+	echo $_POST["txt"];
 	if(isset($_FILES["file"]["type"]))
 		{
 			$validextensions = array("jpeg", "jpg", "png");
