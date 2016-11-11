@@ -19,7 +19,7 @@ if(isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 			$targetPath = "Uploads/".$file;
 			move_uploaded_file($sourcePath,$targetPath);
 			$textfile=md5(uniqid()).".txt";
-			$myfile=fopen('Texts/'.$textfile,'w');
+			$myfile=fopen('Texts/'.$textfile,'w')  or die("Nem lehet megnyitni a fájlt!");
 			fwrite($myfile, $text);
 			fclose($myfile);
 			$res=pg_query($con,"select * from ref");
@@ -45,7 +45,7 @@ else if(!isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 	{
 		$text=$_POST["txt"];
 		$textfile=md5(uniqid()).".txt";
-		$myfile=fopen('Texts/'.$textfile,'w');
+		$myfile=fopen('Texts/'.$textfile,'w')  or die("Nem lehet megnyitni a fájlt!");
 		fwrite($myfile, $text);
 		fclose($myfile);
 		$res=pg_query($con,"select * from ref");
