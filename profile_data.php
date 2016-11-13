@@ -13,4 +13,5 @@
 	$data['email']=$result['email'];
 	$data['picture']=$result['profile_pic'];
 	echo json_encode($data);
+	echo $_POST['Id'];
 ?>
