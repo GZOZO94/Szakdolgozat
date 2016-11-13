@@ -137,6 +137,7 @@
                })
                .success(function(data){
 					scope.user=data;
+					console.log(data);
                });
             }
          }]);
