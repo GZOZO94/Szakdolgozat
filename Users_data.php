@@ -9,7 +9,7 @@
 				echo "Error with connecting.\n";
 				exit;
 			}
-	$res=pg_query($con,"select * from users oder by \"Id\" ASC");
+	$res=pg_query($con,"select * from users order by \"Id\" ASC");
 	while($result=pg_fetch_array($res))
 	{
 		if(isset($_SESSION["Id"]) && $_SESSION["Id"]!=$result["Id"] && isset($_SESSION["priority"]) && $_SESSION["priority"]==1)
