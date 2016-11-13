@@ -21,6 +21,7 @@
 	else
 	$eye=0;
 	ini_set('upload_max_filesize', '10M');
+		echo phpinfo();
 ?>
 <!DOCTYPE HTML>
 <html lang="hu">
