@@ -5,10 +5,10 @@
 				echo "Error with connecting.\n";
 				exit;
 			}
-	$query=sprintf('select * from users where \"Id\"=%d',$_POST['Id']);
+	$Id=11;
+	$query=sprintf('select * from users where \"Id\"=%d',$Id);
 	$res=pg_query($con,$query);
 	$result=pg_fetch_array($res);
-	echo $result['firstname'];
 	$data['firstn']=$result['firstname'];
 	$data['secondn']=$result['lastname'];
 	$data['username']=$result['user_name'];

@@ -159,7 +159,7 @@ if($rows%2!=0)
 			processData:false,
 			success: function(data){
 					var result= jQuery.parseJSON(data);
-					i.siblings('h4').html(result.firstname+" "+ resulr.lastname);
+					i.siblings('h4').html(result.firstname+" "+ result.lastname);
 					i.siblings('h4').show(1000);
 					i.siblings('button').show(1000);
 					i.hide(1000);

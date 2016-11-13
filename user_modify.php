@@ -78,7 +78,7 @@
 			}
 			if(isset($_POST['birthdate']) && $_POST['birthdate']!=NULL)
 			{
-				if (preg_match("/^[0-9]{4}-|.(0[1-9]|1[0-2])-|.(0[1-9]|[1-2][0-9]|3[0-1])$/", $_POST['birthdate']))
+				if (preg_match("/^[0-9]{4}.(0[1-9]|1[0-2]).(0[1-9]|[1-2][0-9]|3[0-1])$/", $_POST['birthdate']))
 				{
 					$query=sprintf("update users set birthdate='%s' where \"Id\"=%d",pg_escape_string($_POST['birthdate']),$_POST['Id']);
 					pg_query($con,$query);

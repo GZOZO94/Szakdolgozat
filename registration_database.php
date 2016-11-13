@@ -58,7 +58,7 @@
 							{
 								$error['phone_format']="Helytelen telefonszám formátum!";
 							}
-							else if (!preg_match("/^[0-9]{4}-|.(0[1-9]|1[0-2])-|.(0[1-9]|[1-2][0-9]|3[0-1])$/", $date))
+							else if (!preg_match("/^[0-9]{4}.(0[1-9]|1[0-2]).(0[1-9]|[1-2][0-9]|3[0-1])$/", $date))
 							{
 								$error['date_format']="Helytelen dátum formátum!";
 							}

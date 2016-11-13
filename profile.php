@@ -52,7 +52,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a <?php if($eye==0) echo "data-toggle='modal' data-target='#login' href='#'"; else echo "href='Logout.php'";?>><span class="glyphicon glyphicon-log-in"></span><?php if($eye==0) echo" Bejelentkezés"; else echo " Kijelentkezés";?></a></li>
 					<?php if($eye==0) echo "<li><a href='Registration.php'><span class='glyphicon glyphicon-user'></span> Regisztráció</a></li>"; 
-					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='{{path}}{{user.picture}}' style='width: 20px; height: 20px;' /></a></li>"?>
+					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='{{path}}{{user.picture}}' style='width: 20px; height: 20px;' /></a></li>"; ?>
 				</ul>
 			</div>
 		</div>
