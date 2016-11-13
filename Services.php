@@ -6,7 +6,7 @@
 		$Id=$_SESSION["Id"];
 		$eye=1;
 		$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-		$query=sprintf("select profile_pic from user where Id=%d",$Id);
+		$query=sprintf("select profile_pic from user where \"Id\"=%d",$Id);
 		$result=pg_query($con,$query);
 		$result2=pg_fetch_array($result);
 		$profile_picture=$result2["profile_pic"];
@@ -50,7 +50,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a <?php if($eye==0) echo "data-toggle='modal' data-target='#login' href='#'"; else echo "href='Logout.php'";?>><span class="glyphicon glyphicon-log-in"></span><?php if($eye==0) echo" Bejelentkezés"; else echo " Kijelentkezés";?></a></li>
 					<?php if($eye==0) echo "<li><a href='Registration.php'><span class='glyphicon glyphicon-user'></span> Regisztráció</a></li>"; 
-					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='Profile/".$profile_picture."' style='width: 20px; height: 20px;' /></a></li>"?>
+					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='Profile/".$profile_picture."' style='width: 20px; height: 20px;' /></a></li>"; ?>
 				</ul>
 			</div>
 		</div>
