@@ -1,68 +1,122 @@
 ﻿<?php
 			$eye=0;
+			$error= array();
+			$data= array();
 			$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
 			if (!$con) {
 				echo "Error with connecting.\n";
 				exit;
 			}
-			$firstn=$_POST["firstn"];
-			$secondn=$_POST["secondn"];
-			$user=$_POST["user"];
-			$psw1=$_POST["psw"];
-			$psw2=$_POST["pswa"];
-			$email=$_POST["email"];
-			$year=$_POST["year"];
-			$month=$_POST["month"];
-			$day=$_POST["day"];
-			$phone=$_POST["phone"];
+			if(empty($_POST["firstn"]))
+				$error['firstn']='Hiányzó keresztnév';
+			else
+				$firstn=$_POST["firstn"];
+			if(empty($_POST["secondn"]))
+				$error['secondn']='Hiányzó vezetéknév';
+			else
+				$secondn=$_POST["secondn"];
+			if(empty($_POST["username"]))
+				$error['username']='Hiányzó felhasználónév';
+			else
+				$user=$_POST["username"];
+			if(empty($_POST["psw"]))
+				$error['psw']='Hiányzó jelszó';
+			else
+				$psw1=$_POST["psw"];
+			if(empty($_POST["pswa"]))
+				$error['pswa']='Hiányzó jelszóismétlés';
+			else
+				$psw2=$_POST["pswa"];
+			if(empty($_POST["email"]))
+				$error['email']='Hiányzó email';
+			else
+				$email=$_POST["email"];
+			if(empty($_POST["date"]))
+				$error['date']='Hiányzó születési dátum';
+			else
+				$date=$_POST["date"];
+			if(empty($_POST["phone"]))
+				$error['phone']='Hiányzó telefonszám';
+			else
+				$phone=$_POST["phone"];
 			$prof_pic="Profile.jpg";
-			if($psw2==$psw1)
+			if(empty($error))
 			{
-				$result=pg_query($con,"select * from users");
-				while($result0=pg_fetch_array($result))
+				if($psw2==$psw1 )
 				{
-					if($user==$result0["user_name"])
+					$result=pg_query($con,"select * from users");
+					while($result0=pg_fetch_array($result))
 					{
-						$eye=$eye+1;
-					}
-				}
-				if($eye<1)
-					{
-						if(isset($_FILES["file"]["type"]))
+						if($user==$result0["user_name"])
 						{
-							$validextensions = array("jpeg", "jpg", "png");
-							$temporary = explode(".", $_FILES["file"]["name"]);
-							$file_extension = end($temporary);
-							if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) 
+							$eye=$eye+1;
+						}
+					}
+					if($eye<1)
+						{
+							if(!preg_match("/^(06[0-9]{9})$/", $phone))
 							{
-								if ($_FILES["file"]["error"] > 0)
+								$error['phone_format']="Helytelen telefonszám formátum!";
+							}
+							else if (!preg_match("/^[0-9]{4}-|.(0[1-9]|1[0-2])-|.(0[1-9]|[1-2][0-9]|3[0-1])$/", $date))
+							{
+								$error['date_format']="Helytelen dátum formátum!";
+							}
+							else
+							{
+								if(isset($_FILES["file"]["type"]))
 								{
-									echo "Return Code: " . $_FILES["file"]["error"] . "<br/><br/>";
+									$validextensions = array("jpeg", "jpg", "png");
+									$temporary = explode(".", $_FILES["file"]["name"]);
+									$file_extension = end($temporary);
+									if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) 
+									{
+										if ($_FILES["file"]["error"] > 0)
+										{
+											echo "Return Code: " . $_FILES["file"]["error"] . "<br/><br/>";
+										}
+										else
+										{
+											$sourcePath = $_FILES['file']['tmp_name']; 
+											$prof_pic=md5(uniqid()).".".$file_extension;
+											$targetPath = "Profile/".$prof_pic; 
+											move_uploaded_file($sourcePath,$targetPath);
+										}
+									}
 								}
-								else
+								$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%d.%d.%d','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),pg_escape_string($date), pg_escape_string($prof_pic),3);
+								pg_query($con,$query);
+								$result=pg_query($con,"select * from users");
+								while($result2=pg_fetch_array($result))
 								{
-									$sourcePath = $_FILES['file']['tmp_name']; 
-									$prof_pic=md5(uniqid()).".".$file_extension;
-									$targetPath = "Profile/".$prof_pic; 
-									move_uploaded_file($sourcePath,$targetPath);
-								}
+									if($result2["user_name"]==$user && $psw1==$result2["user_password"])
+									{
+										$Id2=$result2["Id"];
+									}
+								}	
 							}
 						}
-						$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%d.%d.%d','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),$year,$month,$day, pg_escape_string($prof_pic),3);
-						pg_query($con,$query);
-						$result=pg_query($con,"select * from users");
-						while($result2=pg_fetch_array($result))
-						{
-							if($result2["user_name"]==$user && $psw1==$result2["user_password"])
-							{
-								$Id2=$result2["Id"];
-							}
-						}	
-						echo "Sikeres regisztráció. Kérlek jelentkezz be!";
+					else 
+					{
+						$error['username_busy']="Ez a felhasználónév már foglalt";
 					}
-				else 
-					echo "Ez a felhasználónév már foglalt. Kérem válasszon egy másikat!";
+				}
+				else
+				{
+					$error['password']="Hibás jelszó ismétlés!";
+				}
+			}
+			if(!empty($error))
+			{
+				$data['success']=false;
+				$data['error']=$error;
 			}
 			else
-				echo "Hibás jelszó ismétlés!";
+			{
+				$data['success']=true;
+				$data['message'] = "Sikeres regisztráció. Kérlek jelentkezz be!";
+				$data['error']=$error;
+			}
+			echo 
+				json_encode($data);
 ?>
