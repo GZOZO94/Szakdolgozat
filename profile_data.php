@@ -5,18 +5,16 @@
 				echo "Error with connecting.\n";
 				exit;
 			}
-	$query=sprintf('select * from users where \"Id\"=%d',$_POST['Id']);
+	$query=sprintf('select * from users where \"Id\"=11');
 	$res=pg_query($con,$query);
-	while($result=pg_fetch_array($res))
-	{
-		$data['firstn']=$result['firstname'];
-		$data['secondn']=$result['lastname'];
-		$data['username']=$result['user_name'];
-		$data['phonenumber']=$result['phone'];
-		$data['birthdate']=$result['birthdate'];
-		$data['password']=$result['user_password'];
-		$data['email']=$result['email'];
-		$data['picture']=$result['profile_pic'];
-	}
+	$result=pg_fetch_array($res);
+	$data['firstn']=$result['firstname'];
+	$data['secondn']=$result['lastname'];
+	$data['username']=$result['user_name'];
+	$data['phonenumber']=$result['phone'];
+	$data['birthdate']=$result['birthdate'];
+	$data['password']=$result['user_password'];
+	$data['email']=$result['email'];
+	$data['picture']=$result['profile_pic'];
 	echo json_encode($data);
 ?>
