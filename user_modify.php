@@ -1,4 +1,6 @@
 ﻿<?php
+	$data=array();
+	$error=array();
 	$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
 	if (!$con) {
 		echo "Error with connecting.\n";
@@ -13,13 +15,13 @@
 			{
 				$query=sprintf("update users set firstname='%s' where \"Id\"=%d",pg_escape_string($_POST['firstname']),$_POST['Id']);
 				pg_query($con,$query);
-				echo $_POST['firstname']." ";
+				$data['firstname']=$_POST['firstname'];
 			}
 			if(isset($_POST['lastname']) && $_POST['lastname']!=NULL)
 			{
 				$query=sprintf("update users set lastname='%s' where \"Id\"=%d",pg_escape_string($_POST['lastname']),$_POST['Id']);
 				pg_query($con,$query);
-				echo $_POST['lastname'];
+				$data['lastname']=$_POST['lastname'];
 			}
 			if(isset($_POST['username']) && $_POST['username']!=NULL)
 			{
@@ -34,22 +36,22 @@
 				{
 					$query=sprintf("update users set user_name='%s' where \"Id\"=%d",pg_escape_string($_POST['username']),$_POST['Id']);
 					pg_query($con,$query);
-					echo $_POST['username'];
+					$data['username']=$_POST['username'];
 				}
 				else 
-					echo 'Username error';
+					$error['username']='Username error';
 			}
 			if(isset($_POST['password']) && $_POST['password']!=NULL)
 			{
 				$query=sprintf("update users set user_password='%s' where \"Id\"=%d",pg_escape_string($_POST['password']),$_POST['Id']);
 				pg_query($con,$query);
-				echo $_POST['password'];
+				$data['password']=$_POST['password'];
 			}
 			if(isset($_POST['email']) && $_POST['email']!=NULL)
 			{
 				$query=sprintf("update users set email='%s' where \"Id\"=%d",pg_escape_string($_POST['email']),$_POST['Id']);
 				pg_query($con,$query);
-				echo $_POST['email'];
+				$data['email']=$_POST['email'];
 			}
 			if(isset($_POST['phonenumber']) && $_POST['phonenumber']!=NULL)
 			{
@@ -57,10 +59,10 @@
 				{
 					$query=sprintf("update users set phone='%s' where \"Id\"=%d",pg_escape_string($_POST['phonenumber']),$_POST['Id']);
 					pg_query($con,$query);
-					echo $_POST['phonenumber'];
+					$data['phonenumber']=$_POST['phonenumber'];
 				}
 				else{
-					echo 'Phone error';
+					$error['phone']='Phone error';
 				}
 			}
 			if(isset($_POST['priority']) && $_POST['priority']!=NULL)
@@ -69,9 +71,10 @@
 				{
 					$query=sprintf("update users set priority=%d where \"Id\"=%d",pg_escape_string($_POST['priority']),$_POST['Id']);
 					pg_query($con,$query);
-					echo $_POST['priority'];
+					$data['priority']=$_POST['priority'];
 				}
-				else echo "Priority error";
+				else 
+					$error['priority']="Priority error";
 			}
 			if(isset($_POST['birthdate']) && $_POST['birthdate']!=NULL)
 			{
@@ -79,10 +82,10 @@
 				{
 					$query=sprintf("update users set birthdate='%s' where \"Id\"=%d",pg_escape_string($_POST['birthdate']),$_POST['Id']);
 					pg_query($con,$query);
-					echo $_POST['birthdate'];
+					$data['birthdate']=$_POST['birthdate'];
 				}
 				else{
-					echo 'Date error';
+					$error['date']='Date error';
 				}
 			}
 			if(isset($_FILES["file"]["type"]))
@@ -101,7 +104,10 @@
 					unlink('Profile/'.$filename);
 					
 				}
+				$data['pic']=$file;
 			}
 		}
 	}
+	$data['error']=$error;
+	echo json_encode($data);
 ?>

@@ -158,7 +158,8 @@ if($rows%2!=0)
 			cache: false,            
 			processData:false,
 			success: function(data){
-					i.siblings('h4').html(data);
+					var result= jQuery.parseJSON(data);
+					i.siblings('h4').html(result.firstname+" "+ resulr.lastname);
 					i.siblings('h4').show(1000);
 					i.siblings('button').show(1000);
 					i.hide(1000);
@@ -217,7 +218,8 @@ if($rows%2!=0)
 				contentType: false,       
 				cache: false,            
 				processData:false,
-				success: function(data){
+				success: function(result){
+						var data= jQuery.parseJSON(result);
 					console.log(data);
 				}
 				});
@@ -238,18 +240,25 @@ if($rows%2!=0)
 			contentType: false,       
 			cache: false,            
 			processData:false,
-			success: function(data){
+			success: function(result){
+					var data= jQuery.parseJSON(result);
 					i.parents('li').hide(1000);
-					if(data=='Username error')
+					if(data.error.username)
 						alert('Már létező felhasználónevet adtál meg. Kérlek válassz másikat!');
-					else if(data=='Date error')
+					else if(data.error.date)
 						alert('Téves dátum formátum. Kérlek add meg a következőnek megfelelően: yyyy.mm.dd');
-					else if(data=='Phone error')
+					else if(data.error.phone)
 						alert('Téves telefonszám formátum. Kérlek add meg a következőnek megfelelően: 06705426422');
-					else if(data=='Priority error')
+					else if(data.error.priority)
 						alert('Helytelen prioritás érték. Csak 1-től 3-ig létezik prioritás!');
 					else
-						i.parents('li').prev().children('p').children('span').html(data)
+					{
+						for(x in data)
+						{
+								if(data[x].length>0)
+									i.parents('li').prev().children('p').children('span').html(data[x]);
+						}
+					}
 					i.parents('li').prev().show(1000);
 				}
 			});

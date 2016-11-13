@@ -17,7 +17,6 @@
 					$eye=1;
 					$_SESSION["priority"]=$result2["priority"];
 					$_SESSION["Error"]=false;
-					$_SESSION["prof_pic"]=$result2["profile_pic"];
 				}
 		}
 	if($eye==0)
