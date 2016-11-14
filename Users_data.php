@@ -49,6 +49,7 @@
 												<li class='list-group-item telephone'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Telefonszám</label><input class='form-control' name='phonenumber' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
 												<li class='list-group-item'><p>Prioritási szint: <span>".$result["priority"]."</span><button type='button' class='close priority'>&#9776;</button></p></li>
 												<li class='list-group-item prio'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Prioritás</label><input class='form-control' name='priority' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<button type='button' class='".$result["Id"]." btn btn-primary list-group-item' ><p align='center'>Értesítés</p></button>
 											</ul>
 										</div>
 									</div>
