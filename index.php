@@ -20,7 +20,6 @@
 	}
 	else
 	$eye=0;
-	phpinfo()
 ?>
 <!DOCTYPE HTML>
 <html lang="hu">
