@@ -164,6 +164,8 @@
 						scope.message="Hiba történt: "+data.error.phone+". A telefonszám nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
 					}
+					else
+						scope.message=false;
 			   });
             }
          }]);
