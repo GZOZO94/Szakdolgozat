@@ -16,5 +16,6 @@
 	$data['password']=$result['user_password'];
 	$data['email']=$result['email'];
 	$data['picture']=$result['profile_pic'];
+	$data['message']=$result['message'];
 	echo json_encode($data);
 ?>

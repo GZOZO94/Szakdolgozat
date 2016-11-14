@@ -106,6 +106,12 @@
 				}
 				$data['pic']=$file;
 			}
+			if(isset($_POST['message']))
+			{
+				$query=sprintf("update users set message='%s' where \"Id\"=%d",pg_real_escape_string($_POST['message']),$_POST['Id']);
+				pg_query($con,$query);
+				$data['message']=$_POST['message'];
+			}
 		}
 	}
 	$data['error']=$error;

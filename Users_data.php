@@ -68,8 +68,9 @@ if($rows%2!=0)
 <script>
 	$(document).ready(function(){
 		var user;
+		var changes=new Array();
+		var obj={};
 		var file=new Array();
-		var out=0;
 		$('.user').hide();
 		$('.psw').hide();
 		$('.mail').hide();
@@ -219,7 +220,7 @@ if($rows%2!=0)
 				cache: false,            
 				processData:false,
 				success: function(result){
-						var data= jQuery.parseJSON(result);
+					var data= jQuery.parseJSON(result);
 					console.log(data);
 				}
 				});
@@ -258,6 +259,8 @@ if($rows%2!=0)
 								if(data[x].length>0)
 									i.parents('li').prev().children('p').children('span').html(data[x]);
 						}
+						changes[user]=jQuery.extend(changes[user], data);
+						console.log(changes);
 					}
 					i.parents('li').prev().show(1000);
 				}
@@ -266,6 +269,30 @@ if($rows%2!=0)
 		});
 		$('.panel-heading').find('input').on('click',function(e){
 				$(this).val("");
+		});
+		$('ul').children('button').on('click',function(){
+			var i=$(this);
+			var formData=new FormData();
+			var data=changes[user];
+			user=i.attr('class');
+			user=user.substr(0,user.indexOf(' '));
+			for(x in data)
+			{
+					if(data[x].length>0)
+						formData.append(x,data[x]);
+			}
+			formData.append('Id',user);
+			$.ajax({
+			url: 'message.php',
+			type: 'POST',
+			data: formData,
+			contentType: false,       
+			cache: false,            
+			processData:false,
+			success: function(result){
+				console.log(result);
+				}
+			});
 		});
 	});
 </script>

@@ -120,6 +120,12 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="alert alert-info" ng-show='user.message'>
+				<a href="#" class="close" data-dismiss="alert" ng-click='getmessage()' aria-label="close" >&times;</a>
+				<p align="center">Adatmódosítás: {{user.message}}</p>
+			</div>
+		</div>
 	</div>
 	<div class="container text-center well">
 		<p>Copyright &copy; The future software 2016</p>
@@ -191,10 +197,15 @@
 			$scope.change=function(){
 				counter=1;
 			};
+			
 			var Id=<?php echo $Id;?>;
 			var Url="profile_data.php";
 			var sendUrl='user_modify.php';
 			getdata.data(Id,Url,$scope);
+			$scope.getmessage=function(){
+				$scope.user.message="";
+				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
+			}
 			$scope.send=function(){
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
 				counter=0;
