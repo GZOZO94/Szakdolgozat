@@ -89,7 +89,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="firstn">Keresztnév:</label>
 						<div class="col-sm-10">
-							<input type="text" placeholder="Keresztnév" class="form-control" id="firstn" name="firstn" ng-model='formData.firstn' required  />
+							<input type="text" placeholder="Keresztnév" class="form-control" id="firstn" name="firstn" ng-change="change_firstn()" ng-model='formData.firstn' required  />
 							<div class="alert alert-danger" ng-show='firstn'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close" >&times;</a>
 								<p>{{firstn}}</p>
@@ -99,7 +99,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="secondn">Vezetéknév:</label>
 						<div class="col-sm-10">
-							<input type="text" placeholder="Vezetéknév" class="form-control" id="secondn" name="secondn" ng-model='formData.secondn' required   />
+							<input type="text" placeholder="Vezetéknév" class="form-control" id="secondn" name="secondn" ng-change="change_secondn()"ng-model='formData.secondn' required   />
 							<div class="alert alert-danger" ng-show='secondn'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
 								<p>{{secondn}}</p>
@@ -109,7 +109,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="username">Felhasználónév:</label>
 						<div class="col-sm-10">
-							<input type="text" placeholder="Felhasználónév" class="form-control" id="username" name="user" ng-model='formData.username' required  />
+							<input type="text" placeholder="Felhasználónév" class="form-control" id="username" name="user" ng-change="change_username()" ng-model='formData.username' required  />
 							<div class="alert alert-danger" ng-show='username'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
 								<p>{{username}}</p>
@@ -119,7 +119,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="psw">Jelszó</label>
 						<div class="col-sm-10">
-							<input type="password" placeholder="Jelszó" class="form-control" id="psw" name="psw" ng-model='formData.psw' required  />
+							<input type="password" placeholder="Jelszó" class="form-control" id="psw" name="psw" ng-change="change_psw()" ng-model='formData.psw' required  />
 							<div class="alert alert-danger" ng-show='psw'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
 								<p>{{psw}}</p>
@@ -129,7 +129,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="pswa">Jelszó ismét:</label>
 						<div class="col-sm-10">
-							<input type="password" placeholder="Jelszó ismét" class="form-control" id="pswa" name="pswa" ng-model='formData.pswa' required  />
+							<input type="password" placeholder="Jelszó ismét" class="form-control" id="pswa" name="pswa" ng-change="change_pswa()" ng-model='formData.pswa' required  />
 							<div class="alert alert-danger" ng-show='pswa'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
 								<p>{{pswa}}</p>
@@ -139,7 +139,7 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="phone">Telefonszám:</label>
 						<div class="col-sm-10">
-							<input type="text" placeholder="Telefonszám" class="form-control" id="phone" name="phone"  ng-model='formData.phone' required  />
+							<input type="text" placeholder="Telefonszám" class="form-control" id="phone" name="phone" ng-change="change_phone()" ng-model='formData.phone' required  />
 							<div class="alert alert-danger" ng-show='phone'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
 								<p>{{phone}}</p>
@@ -149,17 +149,17 @@
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="email">Email:</label>
 						<div class="col-sm-10">
-							<input type="email" placeholder="Email" class="form-control" id="mail" name="email" ng-model='formData.email' required  />
-							<div class="alert alert-danger" ng-show='mail'>
+							<input type="text" placeholder="Email" class="form-control" id="mail" name="email" ng-change="change_email()" ng-model='formData.email' required  />
+							<div class="alert alert-danger" ng-show='email'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
-								<p>{{mail}}</p>
+								<p>{{email}}</p>
 							</div>
 						</div>
 					</div>
 					<div class="form-group">
 						<label class="control-label col-sm-2" for="date">Születési dátum:</label>
 						<div class="col-sm-10">
-							<input type="text" placeholder="Születési dátum" class="form-control" id="date" name="date" ng-model='formData.date' required  />
+							<input type="text" placeholder="Születési dátum" class="form-control" id="date" name="date" ng-change="change_date()" ng-model='formData.date' required  />
 							<div class="alert alert-danger" ng-show='date'>
 								<a href="#" class="close" data-dismiss="alert" aria-label="close"  >&times;</a>
 								<p>{{date}}</p>
@@ -197,65 +197,65 @@
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
                })
-               .success(function(data){
-					if(data.error.length!=0)
+               .success(function(result){
+					if(result.error.length!=0)
 					{
-						if (data.error.firstn)
-							scope.firstn=data.error.firstn;
+						if (result.error.firstn)
+							scope.firstn=result.error.firstn;
 						else
 							scope.firstn=false;
-						if (data.error.secondn)
-							scope.secondn=data.error.secondn; 
+						if (result.error.secondn)
+							scope.secondn=result.error.secondn; 
 						else
 							scope.secondn=false;
-						if (data.error.username)
-								scope.username=data.error.username; 
+						if (result.error.username)
+								scope.username=result.error.username; 
 						else
 						{
-							if (data.error.username_busy) 
-								scope.username=data.error.username_busy;
+							if (result.error.username_busy) 
+								scope.username=result.error.username_busy;
 							else
 								scope.username=false;
 						}
-						if (data.error.date) {
-							scope.date=data.error.date;
+						if (result.error.date) {
+							scope.date=result.error.date;
 						}
 						else
 						{
-							if (data.error.date_format)
-								scope.date=data.error.date_format; 
+							if (result.error.date_format)
+								scope.date=result.error.date_format; 
 							else
 								scope.date=false;
 						}
-						if (data.error.phone) {
-								scope.phone=data.error.phone; 
+						if (result.error.phone) {
+								scope.phone=result.error.phone; 
 						}
 						else
 						{
-							if (data.error.phone_format)
-								scope.phone=data.error.phone_format; 
+							if (result.error.phone_format)
+								scope.phone=result.error.phone_format; 
 							else
 								scope.phone=false;
 						}
-						if (data.error.email)
-								scope.mail=data.error.email; 
+						if (result.error.email)
+								scope.email=result.error.email; 
 						else
 							scope.mail=false;
-						if (data.error.psw)
-								scope.psw=data.error.psw; 
+						if (result.error.psw)
+								scope.psw=result.error.psw; 
 						else
 						{
-							if (data.error.password)
-								scope.psw=data.error.password;
+							if (result.error.password)
+								scope.psw=result.error.password;
 							else
 								scope.psw=false;
 						}
-						if (data.error.pswa)
-								scope.pswa=data.error.pswa; 
+						if (result.error.pswa)
+								scope.pswa=result.error.pswa; 
 						else
 						{
-							if (data.error.password)
-								scope.pswa=data.error.password;
+							if (result.error.password)
+								scope.pswa=result.error.password;
 							else
 								scope.pswa=false;
 						}
@@ -263,7 +263,7 @@
 					}
 					else
 					{
-						scope.message=data.message;
+						scope.message=result.message;
 						scope.pswa=false;
 						scope.psw=false;
 						scope.phone=false;
@@ -271,6 +271,7 @@
 						scope.username=false;
 						scope.firstn=false;
 						scope.secondn=false;
+						scope.email=false;
 					}
                });
             }
@@ -278,6 +279,30 @@
       
          myApp.controller('myController', ['$scope', 'fileUpload', function($scope, fileUpload){
 			$scope.picture='Pictures/Profile.jpg';
+			$scope.change_firstn=function(){
+				$scope.firstn=false;
+			};
+			$scope.change_secondn=function(){
+				$scope.secondn=false;
+			};
+			$scope.change_username=function(){
+				$scope.username=false;
+			};
+			$scope.change_phone=function(){
+				$scope.phone=false;
+			};
+			$scope.change_date=function(){
+				$scope.date=false;
+			};
+			$scope.change_email=function(){
+				$scope.email=false;
+			};
+			$scope.change_psw=function(){
+				$scope.psw=false;
+			};
+			$scope.change_pswa=function(){
+				$scope.pswa=false;
+			};
 			$scope.filechange=function(e){
 				file=e.files[0];
 				var reader = new FileReader();

@@ -52,7 +52,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a <?php if($eye==0) echo "data-toggle='modal' data-target='#login' href='#'"; else echo "href='Logout.php'";?>><span class="glyphicon glyphicon-log-in"></span><?php if($eye==0) echo" Bejelentkezés"; else echo " Kijelentkezés";?></a></li>
 					<?php if($eye==0) echo "<li><a href='Registration.php'><span class='glyphicon glyphicon-user'></span> Regisztráció</a></li>"; 
-					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='{{path}}{{user.picture}}' style='width: 20px; height: 20px;' /></a></li>"; ?>
+					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='{{path}}{{user.picture}}' style='width: 20px; height: 20px;' /></a></li>"?>
 				</ul>
 			</div>
 		</div>
@@ -94,7 +94,7 @@
 					<img src="{{path}}{{user.picture}}" alt={{user.picture}} class="img img-responsive img-thumbnail center-block" style='width: 200px; height: 200px' />
 					<br />
 					<label class='btn btn-primary btn-file center-block'>
-						Feltöltés<input type='file' name='file' onchange="angular.element(this).scope().filechange(this)" style=' display:none;' />
+						Feltöltés<input type='file' name='file' onchange="angular.element(this).scope().filechange(this)"  style=' display:none;' />
 					</label>
 				</div>
 			</div>
@@ -107,13 +107,13 @@
 						<ul class='list-group'>
 							<li class='list-group-item'>Felhasználónév: {{user.username}}</li>
 							<li class='list-group-item'>Jelszó: {{user.password}}<button type="button" ng-click='toggle_psw()' class="close">&#9776;</button></li>
-							<li class='list-group-item'  ng-show='show_psw'><input type='password' class="form-control" ng-model="user.password" style='color: black;'/></li>
+							<li class='list-group-item'  ng-show='show_psw'><input type='password' ng-change="change()" lass="form-control" ng-model="user.password" style='color: black;'/></li>
 							<li class='list-group-item'>Email: {{user.email}}<button type="button" ng-click='toggle_email()' class="close">&#9776;</button></li>
-							<li class='list-group-item'  ng-show='show_email'><input type='text' class="form-control" ng-model="user.email" style='color: black;'/></li>
+							<li class='list-group-item'  ng-show='show_email'><input type='text'  ng-change="change()" class="form-control" ng-model="user.email" style='color: black;'/></li>
 							<li class='list-group-item'>Telefonszám: {{user.phonenumber}}<button type="button" ng-click='toggle_phone()' class="close">&#9776;</button></li>
-							<li class='list-group-item' ng-show='show_phone'><input type='text' class="form-control" ng-model="user.phonenumber" style='color: black;'/></li>
+							<li class='list-group-item' ng-show='show_phone'><input type='text'  ng-change="change()" class="form-control" ng-model="user.phonenumber" style='color: black;'/></li>
 							<li class='list-group-item'>Dátum: {{user.birthdate}}<button type="button" ng-click='toggle_date()' class="close">&#9776;</button></li>
-							<li class='list-group-item' ng-show='show_date'><input type='text' class="form-control" ng-model="user.birthdate" style='color: black;'/></li>
+							<li class='list-group-item' ng-show='show_date'><input type='text' ng-change="change()" class="form-control" ng-model="user.birthdate" style='color: black;'/></li>
 							<li class='list-group-item' ng-click='send()'><p align='center'>Küldés</p></li>
 						</ul>
 					</div>
@@ -126,6 +126,7 @@
 	</div>
 	<script>
 		var file;
+		var counter=0;
 		var myApp=angular.module('myApp',[]);
 		myApp.service('getdata', ['$http',function ($http) {
             this.data = function(data,Url,scope){
@@ -137,12 +138,11 @@
                })
                .success(function(data){
 					scope.user=data;
-					console.log(data);
                });
             }
          }]);
 		 myApp.service('senddata', ['$http',function ($http) {
-            this.data = function(Id,data,Url,getdata,scope,file){
+            this.data = function(Id,data,Url,getdata,scope,file,counter){
                var fd = new FormData();
 			   for(x in data)
 					fd.append(x,data[x]);
@@ -153,14 +153,14 @@
                   headers: {'Content-Type': undefined}
                }).success(function(data){
 					console.log(data);
-					if(data.error.length==0)
+					if(data.error.length==0 && counter==1)
 						scope.message="Sikeres modosítás";
 					else if(data.error.date)
 					{
 						scope.message="Hiba történt: "+data.error.date+". A dátum nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
 					}
-					else {
+					else if(data.error.phone){
 						scope.message="Hiba történt: "+data.error.phone+". A telefonszám nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
 					}
@@ -186,15 +186,20 @@
 			$scope.toggle_phone=function(){
 				$scope.show_phone=!$scope.show_phone;
 			};
+			$scope.change=function(){
+				counter=1;
+			};
 			var Id=<?php echo $Id;?>;
 			var Url="profile_data.php";
 			var sendUrl='user_modify.php';
 			getdata.data(Id,Url,$scope);
 			$scope.send=function(){
-				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file);
+				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
+				counter=0;
 			};
 			$scope.filechange=function(e){
 				file=e.files[0];
+				counter=1;
 				var reader = new FileReader();
 				reader.onload = function(event)
 				{

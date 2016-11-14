@@ -239,6 +239,9 @@
 						percent.html(percentVal);
 					}
 				});
+				$('#txt').val("");
+				$('#preview').html("<img id='image' src='Pictures/pic.jpg' class='img-thumbnail img-responsive' style=' width: 350px; height: 350px' />");
+				file=[];
 				return false;
 			});
 			$('#file').change(function(){
