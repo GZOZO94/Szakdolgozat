@@ -9,20 +9,20 @@
 		$eye=1; /*ha be vagyunk jelenkezve, akkor 1-be állítom, ezzel bizonyos elemekt megjlenítek, másokat elrejtek*/
 		$error=$_SESSION["Error"]; /*akkor az $error hamis értéket vesz fel*/
 		include('connection_database.php'); /*kapcsolódás az adatbázishoz*/
-		$query=sprintf("select profile_pic from user where Id=%d",$Id);/*megkeresem a profilképet*/
-		$result=mysqli_query($con,$query);
-		$result2=mysqli_fetch_array($result);
+		$query=sprintf("select profile_pic from users where \"Id\"=%d",$Id);/*megkeresem a profilképet*/
+		$result=pg_query($con,$query);
+		$result2=pg_fetch_array($result);
 		$profile_picture=$result2["profile_pic"];
-		$query=sprintf("select message from user where Id=%d",$Id); /*megkeresem, hogy van-e üzenet*/
-		$result=mysqli_query($con,$query);
-		$result2=mysqli_fetch_array($result);
+		$query=sprintf("select message from users where \"Id\"=%d",$Id); /*megkeresem, hogy van-e üzenet*/
+		$result=pg_query($con,$query);
+		$result2=pg_fetch_array($result);
 		if($result2['message']!=NULL)
 			$message=1;
 		else
 			$message=0;
-		$query=sprintf("select priority from user where Id=%d",$Id);/*megvizsgálom a felhasználó prioritását*/
-		$result=mysqli_query($con,$query);
-		$result2=mysqli_fetch_array($result);
+		$query=sprintf("select priority from users where \"Id\"=%d",$Id);/*megvizsgálom a felhasználó prioritását*/
+		$result=pg_query($con,$query);
+		$result2=pg_fetch_array($result);
 		$_SESSION['priority']=$result2['priority'];
 	}
 	else if(isset($_SESSION["Error"]))
@@ -101,7 +101,7 @@ unset($_SESSION["Error"]);
 					<h4 class="modal-title">Bejelentkezés</h4>
 				</div>
 				<div class="modal-body">
-					 <form id="log_in" action="http://localhost:80/Szakdolgozat/login_database.php" method="post">
+					 <form id="log_in" action="login_database.php" method="post">
 						<div class="form-group">
 							<label for="user_name">Felhasználónév</label>
 							<input type="text" class="form-control" id="user_name" placeholder="Felhasználónév" name="user_name" required>
