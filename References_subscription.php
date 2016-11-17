@@ -5,17 +5,13 @@ if (session_status() == PHP_SESSION_NONE)
 	}
 $watch=0;
 $null_item=0;
-$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-			if (!$con) {
-				echo "Error with connecting.\n";
-				exit;
-			}
+include('connection_database.php');
 $res=pg_query($con,"select * from pictures");
 echo "<div class='row well well-sm'>
 			<div class='col-sm-5'>
 				<div id='Carousel' class='carousel slide' data-ride='carousel'>
 					<div class='carousel-inner' role='listbox'>";
-while($result=pg_fetch_array($res))
+while($result=mysqli_fetch_array($res))
 {
 	if($_SESSION["ref_Id"]==$result['references_ref_id'])
 	{
@@ -56,7 +52,7 @@ while($result=pg_fetch_array($res))
 				</a>
 			</div>
 			<div class='col-sm-7 well well-lg'>";
-$query=sprintf("select * from ref where ref_id=%d",$_SESSION["ref_Id"]);
+$query=sprintf("select * from ref where ref_Id=%d",$_SESSION["ref_Id"]);
 $res=pg_query($con,$query);
 while($result2=pg_fetch_array($res))
 	{		
@@ -88,7 +84,7 @@ while($result2=pg_fetch_array($res))
 								include('Ref_pictures.php');
 			echo					"</div>
 									<div class='col-sm-6'>
-										<img id='main_pic' class='img img-responsive img-thumbnail center-block' src='Uploads/pic.jpg' alt='pic.jpg' />
+										<img id='main_pic' class='img img-responsive img-thumbnail center-block' src='Uploads/Pic.jpg' alt='Pic.jpg' />
 									</div>
 								</div>
 							</div>

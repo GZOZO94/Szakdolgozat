@@ -29,6 +29,9 @@
 	.connection {
 		background: #A1A1F9;
 	}
+	.badge-info {
+		background-color: #269abc;;
+	}
 	</style>
 </head>
 <body ng-app='myApp' ng-controller='myCont'>
@@ -52,7 +55,7 @@
 				<ul class="nav navbar-nav navbar-right">
 					<li><a <?php if($eye==0) echo "data-toggle='modal' data-target='#login' href='#'"; else echo "href='Logout.php'";?>><span class="glyphicon glyphicon-log-in"></span><?php if($eye==0) echo" Bejelentkezés"; else echo " Kijelentkezés";?></a></li>
 					<?php if($eye==0) echo "<li><a href='Registration.php'><span class='glyphicon glyphicon-user'></span> Regisztráció</a></li>"; 
-					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='{{path}}{{user.picture}}' style='width: 20px; height: 20px;' /></a></li>"?>
+					else echo "<li><a href='profile.php'><span ng-show='notice' class='badge badge-info'>{{notice}}</span><span class='glyphicon glyphicon-user'></span> Profilom <img src='{{path}}{{user.picture}}' style='width: 20px; height: 20px;' /></a></li>"?>
 				</ul>
 			</div>
 		</div>
@@ -83,9 +86,9 @@
 	</div>
 	<div class="container-fluid">
 		<div class="row">
-			<div class="alert alert-success" ng-show='message'>
-				<a href="#" class="close" data-dismiss="alert" aria-label="close" >&times;</a>
-				<p align="center">{{message}}</p>
+			<div class="alert alert-success" ng-show='res'>
+				<a href="#" class="close" ng-click='done()'>&times;</a>
+				<p align="center">{{res}}</p>
 			</div>
 		</div>
 		<div class='row'>
@@ -144,6 +147,10 @@
                })
                .success(function(data){
 					scope.user=data;
+					if(data.message=="" || data.message==null)
+						scope.notice=false;
+					else 
+						scope.notice=1;
                });
             }
          }]);
@@ -160,23 +167,24 @@
                }).success(function(data){
 					console.log(data);
 					if(data.error.length==0 && counter==1)
-						scope.message="Sikeres modosítás";
+						scope.res="Sikeres modosítás";
 					else if(data.error.date)
 					{
-						scope.message="Hiba történt: "+data.error.date+". A dátum nem került modosításra!";
+						scope.res="Hiba történt: "+data.error.date+". A dátum nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
 					}
 					else if(data.error.phone){
-						scope.message="Hiba történt: "+data.error.phone+". A telefonszám nem került modosításra!";
+						scope.res="Hiba történt: "+data.error.phone+". A telefonszám nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
 					}
 					else
-						scope.message=false;
+						scope.res=false;
 			   });
             }
          }]);
 		myApp.controller('myCont',function($scope,getdata,senddata){
 			$scope.user={};
+			$scope.user.message="";
 			$scope.path='Profile/';
 			$scope.show_psw=false;
 			$scope.toggle_psw=function(){
@@ -197,13 +205,16 @@
 			$scope.change=function(){
 				counter=1;
 			};
-			
+			$scope.done=function(){
+				$scope.res=false; 
+			};
 			var Id=<?php echo $Id;?>;
 			var Url="profile_data.php";
 			var sendUrl='user_modify.php';
 			getdata.data(Id,Url,$scope);
 			$scope.getmessage=function(){
 				$scope.user.message="";
+				$scope.notice=false;
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
 			}
 			$scope.send=function(){

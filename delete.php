@@ -1,21 +1,17 @@
 <?php
 if(isset($_POST['ref_id']))
 {
-	$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-			if (!$con) {
-				echo "Error with connecting.\n";
-				exit;
-			}
+	include('connection_database.php');
 	$res=pg_query($con,"select * from pictures");
 	while($result=pg_fetch_array($res))
 	{
-		if($_POST['ref_id']==$result['References_ref_id'])
+		if($_POST['ref_id']==$result['references_ref_id'])
 		{
 			$filename=$result["pic_name"];
 			unlink('Uploads/'.$filename);
 		}
 	}
-	$query_data=sprintf('delete from pictures where References_ref_id=%d',$_POST['ref_id']);
+	$query_data=sprintf('delete from pictures where references_ref_id=%d',$_POST['ref_id']);
 	pg_query($con,$query_data);
 	$res=pg_query($con,"select * from ref");
 	while($result=pg_fetch_array($res))

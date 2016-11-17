@@ -1,17 +1,29 @@
 ﻿<?php 
-	session_start();
-	$eye=0;
-	$error=false;
-	if(isset($_SESSION["Id"]))
+	session_start(); /*munkafolyamat elindítása*/
+	$eye=0;/*ha be vagyunk jelenkezve, akkor 1-be állítom, ezzel bizonyos elemekt megjlenítek, másokat elrejtek*/
+	$error=false; /*ha nem sikerül a bejelentkezés errort kapunk */
+	$message=0; /*abban az esetben, ha van üzenetünk az jeleznünk kell*/
+	if(isset($_SESSION["Id"])) /*megvizsgálom, hogy bejelentkeztünk-e*/
 	{
-		$Id=$_SESSION["Id"];
-		$eye=1;
-		$error=$_SESSION["Error"];
-		$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-		$query=sprintf("select profile_pic from users where \"Id\"=%d",$Id);
-		$result=pg_query($con,$query);
-		$result2=pg_fetch_array($result);
+		$Id=$_SESSION["Id"]; /*ha igen, akkor az $Id legyen a felhasználói azonosító*/
+		$eye=1; /*ha be vagyunk jelenkezve, akkor 1-be állítom, ezzel bizonyos elemekt megjlenítek, másokat elrejtek*/
+		$error=$_SESSION["Error"]; /*akkor az $error hamis értéket vesz fel*/
+		include('connection_database.php'); /*kapcsolódás az adatbázishoz*/
+		$query=sprintf("select profile_pic from user where Id=%d",$Id);/*megkeresem a profilképet*/
+		$result=mysqli_query($con,$query);
+		$result2=mysqli_fetch_array($result);
 		$profile_picture=$result2["profile_pic"];
+		$query=sprintf("select message from user where Id=%d",$Id); /*megkeresem, hogy van-e üzenet*/
+		$result=mysqli_query($con,$query);
+		$result2=mysqli_fetch_array($result);
+		if($result2['message']!=NULL)
+			$message=1;
+		else
+			$message=0;
+		$query=sprintf("select priority from user where Id=%d",$Id);/*megvizsgálom a felhasználó prioritását*/
+		$result=mysqli_query($con,$query);
+		$result2=mysqli_fetch_array($result);
+		$_SESSION['priority']=$result2['priority'];
 	}
 	else if(isset($_SESSION["Error"]))
 	{
@@ -34,6 +46,7 @@
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
 	<script>
+	/*ezzel a függvénnyel azt állítom be, hogy ha a főikonra kattintanak "rollozva" jussunk el a leíráshoz*/
 	$(document).ready(function(){
 		$(".navbar-brand").click(function(e){
 			e.preventDefault();
@@ -49,6 +62,7 @@
 <body>
 <?php if($error==true)
 {
+/*Ha hibás a jelszó, vagy a felhasználónév azt jelezni kell*/
 echo "<script type='text/javascript'>$(function(){alert('Hibás jelszó vagy felhasználónév!');});</script>";
 unset($_SESSION["Id"]);
 unset($_SESSION["Error"]);
@@ -72,9 +86,9 @@ unset($_SESSION["Error"]);
 					<?php if(isset($_SESSION["priority"]) && $_SESSION["priority"]==1) echo "<li><a href='users.php'><span class='glyphicon glyphicon-user'></span> Felhasználók</a></li>"; ?>
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
-				<li><a <?php if($eye==0) echo "data-toggle='modal' data-target='#login' href='#'"; else echo "href='Logout.php'";?>><span class="glyphicon glyphicon-log-in"></span><?php if($eye==0) echo" Bejelentkezés"; else echo " Kijelentkezés";?></a></li>
+					<li><a <?php if($eye==0) echo "data-toggle='modal' data-target='#login' href='#'"; else echo "href='Logout.php'";?>><span class="glyphicon glyphicon-log-in"></span><?php if($eye==0) echo" Bejelentkezés"; else echo " Kijelentkezés";?></a></li>
 					<?php if($eye==0) echo "<li><a href='Registration.php'><span class='glyphicon glyphicon-user'></span> Regisztráció</a></li>"; 
-					else echo "<li><a href='profile.php'><span class='glyphicon glyphicon-user'></span> Profilom <img src='Profile/".$profile_picture."' style='width: 20px; height: 20px;' /></a></li>";?>
+					else { echo "<li><a href='profile.php'>"; if($message==1) echo "<span class='badge badge-info'>1</span>"; echo"<span class='glyphicon glyphicon-user'></span> Profilom <img src='Profile/".$profile_picture."' style='width: 20px; height: 20px;' /></a></li>"; }?>
 				</ul>
 			</div>
 		</div>
@@ -87,7 +101,7 @@ unset($_SESSION["Error"]);
 					<h4 class="modal-title">Bejelentkezés</h4>
 				</div>
 				<div class="modal-body">
-					 <form id="log_in" action="login_database.php" method="post">
+					 <form id="log_in" action="http://localhost:80/Szakdolgozat/login_database.php" method="post">
 						<div class="form-group">
 							<label for="user_name">Felhasználónév</label>
 							<input type="text" class="form-control" id="user_name" placeholder="Felhasználónév" name="user_name" required>
@@ -110,14 +124,14 @@ unset($_SESSION["Error"]);
 			</ol>
 			<div class="carousel-inner" role="listbox">
 				<div class="item active">
-					<img src="Pictures/logo.jpg" alt="TFS">
+					<img src="Pictures/logo.jpg" class='img img-responsive center-block' alt="TFS">
 					<div class="carousel-caption">
 						<h3>The Future Software</h3>
 						<p>A világ egyik legnagyobb szoftverportálja</p>
 					</div>
 				</div>
 				<div class="item">
-					<img src="Pictures/logo2.jpg" alt="TFS">
+					<img src="Pictures/logo2.jpg" class='img img-responsive center-block' alt="TFS">
 					<div class="carousel-caption">
 						<h3>The Future Software</h3>
 						<p>A világ egyik legnagyobb szoftverportálja</p>

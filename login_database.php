@@ -3,11 +3,7 @@
 	$user_name=$_POST["user_name"];
 	$user_psw=$_POST["user_psw"];
 	$eye=0;
-	$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-			if (!$con) {
-				echo "Error with connecting.\n";
-				exit;
-			}
+	include('connection_database.php');
 	$result=pg_query($con,"select * from users");
 	while($result2=pg_fetch_array($result))
 		{
@@ -15,7 +11,6 @@
 				{	
 					$_SESSION['Id']=$result2["Id"];
 					$eye=1;
-					$_SESSION["priority"]=$result2["priority"];
 					$_SESSION["Error"]=false;
 				}
 		}

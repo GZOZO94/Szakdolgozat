@@ -2,11 +2,7 @@
 			$eye=0;
 			$error= array();
 			$data= array();
-			$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-			if (!$con) {
-				echo "Error with connecting.\n";
-				exit;
-			}
+			include('connection_database.php');
 			if(empty($_POST["firstn"]))
 				$error['firstn']='Hiányzó keresztnév';
 			else
@@ -84,9 +80,9 @@
 										}
 									}
 								}
-								$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%s','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),pg_escape_string($date), pg_escape_string($prof_pic),3);
-								pg_query($con,$query);
-								$result=pg_query($con,"select * from users");
+								$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%s','%s',%d)", pg_real_escape_string($user), pg_real_escape_string($psw1), pg_real_escape_string($firstn), pg_real_escape_string($secondn), pg_real_escape_string($email), pg_real_escape_string($phone),pg_real_escape_string($date), pg_real_escape_string($prof_pic),3);
+								pgi_query($con,$query);
+								$result=pgi_query($con,"select * from user");
 								while($result2=pg_fetch_array($result))
 								{
 									if($result2["user_name"]==$user && $psw1==$result2["user_password"])

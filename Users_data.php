@@ -1,25 +1,21 @@
 ﻿<?php
-	if (session_status() == PHP_SESSION_NONE) 
+	if (session_status() == PHP_SESSION_NONE) /*ha nincs futó munkafolyamat, akkor indítok egyet, hogy elérhessem a session változókat*/
 	{
 		session_start();
 	}
-	$rows=0;
-	$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-			if (!$con) {
-				echo "Error with connecting.\n";
-				exit;
-			}
-	$res=pg_query($con,"select * from users order by \"Id\" ASC");
+	$rows=0; /*Ezzel tartom számon a kiírni kivánt elemek számát*/
+	include('connection_database.php'); /*kapcsolódok az adatbázishoz*/
+	$res=pg_query($con,"select * from users"); /*kilistázom a felhasználókat, a listázót kivéve*/
 	while($result=pg_fetch_array($res))
 	{
 		if(isset($_SESSION["Id"]) && $_SESSION["Id"]!=$result["Id"] && isset($_SESSION["priority"]) && $_SESSION["priority"]==1)
 		{
 			$picture=$result["profile_pic"];
-			if($rows%2==0)
+			if($rows%2==0)/*Egy sorban 2 elemet jelenítek meg, ezért, ha az elemek száma 2-vel osztva 0-át ad maradékul akkor új sort kell kezdenem*/
 			{
 				echo "<div class='row'>";
 			}
-			$rows=$rows+1;
+			$rows=$rows+1;/*növelem az elemek számát, és kiírom az adott elemet*/
 			echo "<div class='col-sm-6'>
 					<div class='row well'>
 						<div class='col-sm-4 text-center well profile_picture'>
@@ -57,100 +53,116 @@
 						</div>
 					</div>
 				</div>";
-			if($rows%2==0)
+			if($rows%2==0)/*ha az elemszám növelése után 2-vel osztva 0-át add maradékul akkor le kell zárnom a sort*/
 			{
 				echo "</div>";
 			}
 		}
 	}
-if($rows%2!=0)
+if($rows%2!=0)/* ha nem páros számú felhasználóm van, akkor is az utolsó után le kell zárnom a sort*/
 		echo "</div>";
 ?>
 <script>
 	$(document).ready(function(){
-		var user;
-		var changes=new Array();
-		var obj={};
-		var file=new Array();
-		$('.user').hide();
-		$('.psw').hide();
-		$('.mail').hide();
-		$('.telephone').hide();
-		$('.bdate').hide();
-		$('.prio').hide();
-		$('.panel-heading').children('form').hide();
-		$('.user_name').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
+		var user; /* a felhasználó azonosítója*/
+		var changes=new Array(); /*ezzel tartom számon a változásokat*/
+		var file=new Array(); /*fontos, hogy tudjam, hogy melyik felhasználóhoz tartozik a cserélni kívánt fájl*/
+		/*Elrejtem a meg nem nyitott formokat*/
+		function hide(option){
+			$(option).hide();
 			return false;
-		});
-		$('.password').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
-			return false;
-		});
-		$('.email').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
-			return false;
-		});
-		$('.birth').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
-			return false;
-		});
-		$('.phone').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
-			return false;
-		});
-		$('.priority').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
-			return false;
-		});
-		$('.reset').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').prev().show(1000);
-			return false;
-		});
-		$('.delete').on('click',function(){
-			var formData=new FormData();
-			user=$(this).attr('id');
-			formData.append('Id',user);
-			$.ajax({
-			url: 'user_delete.php',
-			type: 'POST',
-			data: formData,
-			contentType: false,       
-			cache: false,            
-			processData:false,
-			success: function(data){
-				$('#user_data').load('Users_data.php');
-				}
+		};
+		function toggle(option){
+			$(option).on('click',function(){
+				$(this).parents('li').hide(1000);
+				$(this).parents('li').next().show(1000);
+				return false;
 			});
 			return false;
-		});
-		$('.data').on('click',function(){
-			$(this).next().toggle(1000);
+		};
+		function back(option){
+			$(option).on('click',function(){
+				$(this).parents('li').hide(1000);
+				$(this).parents('li').prev().show(1000);
+				return false;
+			});
 			return false;
-		});
-		$('.firstn_secondn').on('click',function(){
-			$(this).siblings('h4').hide(1000);
-			$(this).hide(1000);
-			$(this).siblings('form').show(1000);
+		};
+		function toggle_data(option){
+				$(option).on('click',function(){
+				$(this).next().toggle(1000);
+				return false;
+			});
 			return false;
-		});
-		$('.back').on('click',function(){
-			$(this).parents('form').siblings('h4').show(1000);
-			$(this).parents('form').siblings('button').show(1000);
-			$(this).parents('form').hide(1000);
+		};
+		function name(option){
+			$(option).on('click',function(){
+				$(this).siblings('h4').hide(1000);
+				$(this).hide(1000);
+				$(this).siblings('form').show(1000);
+				return false;
+			});
 			return false;
-		});
+		};
+		function backname(option){
+			$(option).on('click',function(){
+				$(this).parents('form').siblings('h4').show(1000);
+				$(this).parents('form').siblings('button').show(1000);
+				$(this).parents('form').hide(1000);
+				return false;
+			});
+			return false;
+		};
+		function del(onclick,Url,whereload,whatload){
+			$(onclick).on('click',function(){
+				var formData=new FormData();
+				user=$(this).attr('id');/*Megmondom, hogy melyik felhasználót törölje*/
+				formData.append('Id',user);/*És elküldöm az azonosítóját*/
+				$.ajax({
+				url: Url,
+				type: 'POST',
+				data: formData,
+				contentType: false,       
+				cache: false,            
+				processData:false,
+				success: function(data){
+					$(whereload).load(whatload);/*Frissítem az oldal megfelelő részét, ezzel aszinkron törölve a felhasználót*/
+					}
+				});
+				return false;
+			});
+			return false;
+		};
+		
+		hide('.user');
+		hide('.psw');
+		hide('.mail');
+		hide('.telephone');
+		hide('.bdate');
+		hide('.prio');
+		$('.panel-heading').children('form').hide();
+		/*Ha rákattintok a modoítás ikonra, akkor jelenjen meg az alatta lévő form, és ömaga pedig tünjün el*/
+		toggle('.user_name');
+		toggle('.password');
+		toggle('.email');
+		toggle('.birth');
+		toggle('.phone');
+		toggle('.priority');
+		/*Ha az x-re nyomok rá akkor visszavonom a modosítást, vagyis tünjön el a form, és jelenjen meg a felette lévő elem*/
+		back('.reset');
+		/*A felhasználó törlése*/
+		del('.delete','user_delete.php','#user_data','Users_data.php');
+		/*Az adatok gombra kattintva jelenjenek meg a felhasználó adatai*/
+		toggle_data('.data');
+		/*A felhasználó nevének a módosításához jelenjen meg a form, és tünjön el a felette lévő szöveg*/
+		name('.firstn_secondn');
+		/*Ha nem modosítom a felhasználó nevét tünjön el a form, és jelenjen meg a felette lévő szöveg*/
+		backname('.back');
+		/*Ha modosítom a felhasználó nevét el is kell küldenem*/
 		$('.panel-heading').children('form').on('submit',function(e){
 			var formData=new FormData(this);
 			var i=$(this);
-			user=i.attr('class');
+			user=i.attr('class'); /*A form class-ja a felhasználó azonosítója*/
 			formData.append('Id',user);
 			$.ajax({
 			url: 'user_modify.php',
@@ -165,10 +177,13 @@ if($rows%2!=0)
 					i.siblings('h4').show(1000);
 					i.siblings('button').show(1000);
 					i.hide(1000);
+					changes[user]=jQuery.extend(changes[user], result);
+					console.log(changes[user]);
 				}
 			});
 			return false;
 		});
+		/*Drag & drop képfeltöltés*/
 		$('.profile_picture').on('dragover', function(){
 			$('.profile_picture').addClass('drag');
 			return false;
@@ -180,12 +195,12 @@ if($rows%2!=0)
 		$('.profile_picture').on('drop', function(e){
 			e.preventDefault();
 			$('.profile_picture').removeClass('drag');
-			user=$(this).children('img').attr('class');
+			user=$(this).children('img').attr('class'); /*A kép class-jának első eleme a felhasználó azonosítója*/
 			user=user.substr(0,user.indexOf(' '));
 			file[user]=e.originalEvent.dataTransfer.files;
 			preview=$(this).children('img');
 			var imagefile = file[user][0].type;
-			var match= ["image/jpeg","image/png","image/jpg"];
+			var match= ["image/jpeg","image/png","image/jpg"];/*Megvizsgálom, hogy megfelelő formátumú-e a feltölteni kívánt fájl*/
 			if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
 				{
 					alert("Nem megfelelő formátum!");
@@ -193,6 +208,7 @@ if($rows%2!=0)
 				}
 			else
 				{
+					/*megjelenítem a drag & drop-olt fájlt*/
 					var reader = new FileReader();
 					reader.addEventListener("load", function () {
 							$(preview.attr('src',reader.result));
@@ -203,12 +219,13 @@ if($rows%2!=0)
 					}
 				}
 		});
+		/*Ha megynomom a csere gombot kicserli a felhasználó profilképét*/
 		$(".image_upload").on('submit',function(e){
 			e.preventDefault();
 			var formData= new FormData();
 			user=$(this).attr('class');
-			user=user.substr(0,user.indexOf(' '));
-			if(file[user][0].type!=0)
+			user=user.substr(0,user.indexOf(' '));/*A form class-jának első tagja a felhasználó azonosítója*/
+			if(typeof(file[user])!='undefined' && file[user]!=0)
 			{
 				formData.delete('file');
 				formData.append('file',file[user][0]);
@@ -222,13 +239,15 @@ if($rows%2!=0)
 				processData:false,
 				success: function(result){
 					var data= jQuery.parseJSON(result);
-					console.log(data);
+					changes[user]=jQuery.extend(changes[user], data);
+					file[user]=0;
 				}
 				});
 			}
 			else 
 				alert("Nem jelöltél ki új profilképet!");
 		});
+		/*A felhasználó modosított adatainak a továbbítása*/
 		$('ul form').on('submit',function(e){
 			e.preventDefault();
 			var i=$(this);
@@ -261,22 +280,24 @@ if($rows%2!=0)
 									i.parents('li').prev().children('p').children('span').html(data[x]);
 						}
 						changes[user]=jQuery.extend(changes[user], data);
-						console.log(changes);
+						console.log(changes[user]);
 					}
 					i.parents('li').prev().show(1000);
 				}
 			});
 			return false;
 		});
+		/*Ha rákattintok az imput mezőre tünjön el az értéke*/
 		$('.panel-heading').find('input').on('click',function(e){
 				$(this).val("");
 		});
+		/*Értesítés küldése a változtatott elemekről*/
 		$('ul').children('button').on('click',function(){
 			var i=$(this);
 			var formData=new FormData();
-			var data=changes[user];
 			user=i.attr('class');
 			user=user.substr(0,user.indexOf(' '));
+			var data=changes[user];
 			for(x in data)
 			{
 					if(data[x].length>0)

@@ -2,11 +2,7 @@
 if(isset($_POST['Id']) && $_POST['Id']!=NULL)
 {
 	$text="";
-	$con = pg_connect("host=ec2-54-228-213-36.eu-west-1.compute.amazonaws.com port=5432 dbname=d6n8r0rohggpo4 user=jfotvvwtbqcthq password=Yvyw2FjADjwzePR6u5wzpE4Prr");
-			if (!$con) {
-				echo "Error with connecting.\n";
-				exit;
-			}
+	include('connection_database.php');
 	$query=sprintf('select * from users where "Id"=%d',$_POST['Id']);
 	$res=pg_query($con,$query);
 	$result=pg_fetch_array($res);
@@ -41,6 +37,10 @@ if(isset($_POST['Id']) && $_POST['Id']!=NULL)
 	if(isset($_POST['birthdate']) && $_POST['birthdate']!=NULL)
 			{
 				$text=$text."\nSzületésnap: ".$_POST['birthdate'];
+			}
+	if(isset($_POST['pic']) && $_POST['pic']!=NULL)
+			{
+				$text=$text."\nProfilkép: ".$_POST['pic'];
 			}
 	if($text!="")
 	{
