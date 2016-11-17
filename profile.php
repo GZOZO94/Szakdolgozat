@@ -155,7 +155,7 @@
                });
             }
          }]);
-		 myApp.service('senddata', ['$http',function ($http) {
+		  myApp.service('senddata', ['$http',function ($http) {
             this.data = function(Id,data,Url,getdata,scope,file,counter){
                var fd = new FormData();
 			   for(x in data)
@@ -180,7 +180,6 @@
 					}
 					else
 						scope.res=false;
-					console.log(data);
 			   });
             }
          }]);
