@@ -40,7 +40,7 @@ include('connection_database.php');
 			if(isset($_POST['username']) && $_POST['username']!=NULL)
 			{
 				$eye=0;
-				$result2=pg_query($con,"select * from user");
+				$result2=pg_query($con,"select * from users");
 				while($result3=pg_fetch_array($result2))
 				{
 					if($result3['user_name']==$_POST['username'] && $_POST['Id']!=$result3['Id'])
