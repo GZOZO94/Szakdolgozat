@@ -151,6 +151,7 @@
 						scope.notice=false;
 					else 
 						scope.notice=1;
+					console.log(data);
                });
             }
          }]);
@@ -179,6 +180,7 @@
 					}
 					else
 						scope.res=false;
+					console.log(data);
 			   });
             }
          }]);
