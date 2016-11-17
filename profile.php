@@ -222,7 +222,6 @@
 			$scope.send=function(){
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
 				counter=0;
-				console.log('push');
 			};
 			$scope.filechange=function(e){
 				file=e.files[0];

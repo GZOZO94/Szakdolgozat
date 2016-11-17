@@ -112,4 +112,5 @@ include('connection_database.php');
 	}
 	$data['error']=$error;
 	echo json_encode($data);
+	echo "Hello";
 ?>
