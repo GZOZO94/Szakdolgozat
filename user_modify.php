@@ -1,4 +1,5 @@
 ﻿<?php
+echo $_FILES["file"]["type"];
 if(isset($_POST['Id']))
 {
 	$data=array();
