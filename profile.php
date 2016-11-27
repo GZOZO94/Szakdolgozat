@@ -165,6 +165,7 @@
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
                }).success(function(data){
+					console.log(Id);
 					if(data.error.length==0 && counter==1)
 						scope.res="Sikeres modosítás";
 					else if(data.error.date)
