@@ -155,6 +155,7 @@
          }]);
 		 myApp.service('senddata', ['$http',function ($http) {
             this.data = function(Id,data,Url,getdata,scope,file,counter){
+				console.log(Id);
                var fd = new FormData();
 			   for(x in data)
 					fd.append(x,data[x]);
