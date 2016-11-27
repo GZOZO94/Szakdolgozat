@@ -6,6 +6,7 @@ if(isset($_POST['Id']))
 	include('connection_database.php');
 	$query=sprintf('select * from users where "Id"=%d',$_POST['Id']);
 	$res=pg_query($con,$query);
+	echo $_FILES["file"]["type"];
 	while($result=pg_fetch_array($res))
 	{
 			if(isset($_FILES["file"]["type"]))
