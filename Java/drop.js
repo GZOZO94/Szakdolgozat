@@ -1,6 +1,62 @@
-﻿$(document).ready(function(){
+﻿function showdata(data,sendurl,showid){
+		$.ajax({
+			url: sendurl,
+			type: 'POST',
+			data: JSON.stringify(data),
+			contentType: 'application/json',       
+			cache: false,            
+			processData:false,
+			success: function(result){
+				$(showid).html(result);
+			}
+		});
+		return false;
+	};
+	function getdata(geturl,sendurl,showid)
+	{
+		$.ajax({
+			url: geturl,
+			type: 'POST',
+			data: "",
+			contentType: false,       
+			cache: false,            
+			processData:false,
+			dataType: 'json',
+			success: function(data){
+				showdata(data,sendurl,showid);
+				console.log(data);
+			}
+		});
+		return false;
+	};
+	function showfile(file,openfunction)
+	{
+		var imagefile = file.type;
+		var match= ["image/jpeg","image/png","image/jpg"];
+		if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+		{
+			alert("Nem megfelelő formátum!");
+			$('#image').attr('src', 'Pictures/pic.jpg');
+			return false;
+		}
+		else
+		{
+			var reader = new FileReader();
+			reader.onload = openfunction;
+			reader.readAsDataURL(file);
+		}
+		return true;
+	}
+	function imageIsLoaded(e){
+				$('#image').attr('src', e.target.result);
+			};
+$(document).ready(function(){
 	var file=0;
 	var ref_id;
+	var geturl='references_database.php';
+	var sendurl='References_about.php';
+	var showid='#references_about';
+	getdata(geturl,sendurl,showid);
 	$('.drag_over').on('dragover', function(){
 			$('.drag_over').addClass('drag');
 			return false;
@@ -13,20 +69,8 @@
 			e.preventDefault();
 			$('.drag_over').removeClass('drag');
 			file=e.originalEvent.dataTransfer.files;
-			var imagefile = file[0].type;
-			var match= ["image/jpeg","image/png","image/jpg"];
-			if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
-				{
-					alert("Nem megfelelő formátum!");
-					$('#image').attr('src', 'Pictures/pic.jpg');
-					return false;
-				}
-			else
-			{
-				var reader = new FileReader();
-				reader.onload = imageIsLoaded;
-				reader.readAsDataURL(file[0]);
-			}
+			file=file[0];
+			showfile(file,imageIsLoaded);
 		return false;
 		});
 	$("#image_upload").on('submit',function(e){
@@ -35,7 +79,7 @@
 		if(file!=0)
 		{
 			formData.delete('file');
-			formData.append('file',file[0]);
+			formData.append('file',file);
 		}
 		$.ajax({
 			url: 'drop.php',
@@ -45,36 +89,17 @@
 			cache: false,            
 			processData:false,
 			success: function(data){
-				file=0;
-				console.log(data);
-				$("#references_about").load("References_about.php");
+				getdata(geturl,sendurl,showid);
 			}
 			});
 		return false;
 		});
 	$('#file').change(function(){
 		var files = this.files[0];
-		var imagefile = files.type;
-		var match= ["image/jpeg","image/png","image/jpg"];
-			if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
-				{
-					alert("Nem megfelelő formátum!");
-					$('#image').attr('src', 'Pictures/pic.jpg');
-					return false;
-				}
-			else
-			{
-				var reader = new FileReader();
-				reader.onload = imageIsLoaded;
-				reader.readAsDataURL(this.files[0]);
-			}
-			return false;
+		showfile(files,imageIsLoaded);
 		});
-		$('#modify').on('hidden.bs.modal',function(){
-			$('#references_about').load("References_about.php");
-			return false;
+	$('#modify').on('hidden.bs.modal',function(){
+		getdata(geturl,sendurl,showid);
+		return false;
 	});
-	function imageIsLoaded(e){
-				$('#image').attr('src', e.target.result);
-			};
 });

@@ -1,33 +1,31 @@
 <?php
 if(isset($_POST['ref_id']))
 {
-	include('connection_database.php');
-	$res=pg_query($con,"select * from pictures");
-	while($result=pg_fetch_array($res))
+	include('connection_database.php');//Kapcsolódás az adatbázishoz
+	$query=sprintf("select * from pictures where references_ref_id=%d",$_POST['ref_id']);//Az adott referenciához tartozó információk lekérdezése
+	$res=pg_query($con,$query);
+	while($result=pg_fetch_array($res))//Az adatok végigolvasása
 	{
-		if($_POST['ref_id']==$result['references_ref_id'])
-		{
 			$filename=$result["pic_name"];
-			unlink('Uploads/'.$filename);
-		}
+			if($filename!='pic.jpg')
+				unlink('Uploads/'.$filename);//Az adott kép törlése, ha nem az alapértelmezett pic.jpg
 	}
-	$query_data=sprintf('delete from pictures where references_ref_id=%d',$_POST['ref_id']);
+	$query_data=sprintf('delete from pictures where references_ref_id=%d',$_POST['ref_id']); //Az adatbáziselem törlése
 	pg_query($con,$query_data);
-	$res=pg_query($con,"select * from ref");
+	$query=sprintf("select * from ref where ref_id=%d",$_POST['ref_id']);
+	$res=pg_query($con,$query);
 	while($result=pg_fetch_array($res))
 	{
-		if($_POST['ref_id']==$result['ref_id'])
+		if($result['long_text']!=NULL)//Az adott referenciához tartozó szöveges fájl törlése
 		{
-			if($result['long_text']!=NULL)
-			{
-				$filename=$result["long_text"];
-				unlink('Texts/'.$filename);
-			}
-			$filename=$result["prof_picture"];
-			unlink('Uploads/'.$filename);
+			$filename=$result["long_text"];
+			unlink('Texts/'.$filename);
 		}
+		$filename=$result["prof_picture"];
+		if($filename!='pic.jpg')
+			unlink('Uploads/'.$filename);//Az adott referenciához tartozó borítókép törlése
 	}
-	$query=sprintf('delete from ref where ref_id=%d',$_POST['ref_id']);
+	$query=sprintf('delete from ref where ref_id=%d',$_POST['ref_id']);//Az adott referencia törlése
 	pg_query($con,$query);
 }
 ?>

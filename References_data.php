@@ -16,7 +16,6 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
-	<script src="Java/ref_data.js"></script>
 	<style type="text/css">
 	.drag_over{
 		border: 2px dashed #ccc; 
@@ -75,7 +74,6 @@
 	</div>
 	<div class="container-fluid">
 		<div id="data">
-			<?php include("References_subscription.php"); ?>
 		</div>
 		<?php
 		if($eye==1 && $_SESSION["priority"]<3)
@@ -119,13 +117,70 @@
 		<p>Copyright &copy; The future software 2016</p>
 	</div>
 	<script>
+		function checktype(file,isload){
+			var match= ["image/jpeg","image/png","image/jpg"];
+			for( var i=0; i<file.length; i++)
+			{
+				var imagefile = file[i].type;
+				if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+				{
+					alert("Nem megfelelő formátum!");
+					$('#image').attr('src', 'Pictures/pic.jpg');
+					return false;
+				}
+				else
+				{
+					var reader = new FileReader();
+					reader.readAsDataURL(file[i]);
+					reader.onload = isload;
+				}
+			}
+			return true;
+		};
+		function show(data,sendurl,showid){
+		$.ajax({
+			url: sendurl,
+			type: 'POST',
+			data: JSON.stringify(data),
+			contentType: 'application/json',       
+			cache: false,            
+			processData:false,
+			success: function(result){
+				$(showid).html(result);
+			}
+		});
+		return false;
+	};
+	function get(ref_id,geturl,sendurl,showid)
+	{
+		var formData=new FormData();
+		formData.append('ref_id', ref_id);
+		$.ajax({
+			url: geturl,
+			type: 'POST',
+			data: formData,
+			contentType: false,       
+			cache: false,            
+			processData:false,
+			dataType: 'json',
+			success: function(data){
+				show(data,sendurl,showid);
+			}
+		});
+		return false;
+	};
 		$(document).ready(function(){
-			var file=new Array();
-			var files;
+			var file=new Array(); //Tömb a képek tárolására
+			var files; //A feltöltött képek File típusú tömbje
 			var view=0;
-			var rows=0;
+			var pic_num=0;
 			var percent = $('.percent');
-
+			var geturl='ref_pictures_database.php';
+			var sendurl='References_subscription.php';
+			var showid='#data';
+			var ref_id=<?php echo $_SESSION['ref_Id']?>;
+			
+			get(ref_id,geturl,sendurl,showid);
 			$("#refresh").on('click',function(){
 				$('#txt').val("");
 				$('#preview').html("<img id='image' src='Pictures/pic.jpg' class='img-thumbnail img-responsive' style=' width: 350px; height: 350px' />");
@@ -150,42 +205,21 @@
 				percent.html(percentVal);
 				event.preventDefault();
 				view=0;
-				rows=0;
+				pic_num=0;
 				$('.upload_image_multi').removeClass('drag_over');
 				files=event.originalEvent.dataTransfer.files;
 				for(var i=0; i<files.length; ++i)
 				{
 					file[i]=files[i];
 				}
-				var match= ["image/jpeg","image/png","image/jpg"];
-				for( var i=0; i<file.length; i++)
+				var result;
+				result=checktype(file,load);
+				if(result==false)
 				{
-					var imagefile=file[i].type;
-					if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
-					{
-						alert("Nem megfelelő formátum!");
-						return false;
-					}
-					else
-					{	
-						var reader = new FileReader();
-						reader.readAsDataURL(file[i]);
-						var pic_num=0;
-						reader.onload = function(e)
-						{
-							if(view==0)
-							{
-								$('#preview').html("<div class='row well well-sm elem'><div class='col-sm-3'><img src='"+e.target.result+"'  title='"+pic_num+"' class='img img-responsive' style=' width: 100px; height: 100px' /></div><div class='col-sm-9'><button type='button' class='close remove' id='"+pic_num+"' >&cross;</button></div></div>");
-								view=1;
-							}
-							else
-								$('#preview').append("<div class='row well well-sm elem'><div class='col-sm-3'><img src='"+e.target.result+"' title='"+pic_num+"' class='img img-responsive' style=' width: 100px; height: 100px' /></div><div class='col-sm-9'><button type='button' class='close remove' id='"+pic_num+"' >&cross;</button></div></div>");
-							pic_num=pic_num+1;
-						}
-					}
+					file=0;
+					$('#preview').html("<img id='image' src='Pictures/pic.jpg' class='img-thumbnail img-responsive' style=' width: 350px; height: 350px' />");
+					return false;
 				}
-				if(rows%4!=0)
-							$('#preview').append('</div>');
 				return false;
 			});
 			$("#ref_data").on('submit',function(e){
@@ -199,7 +233,6 @@
 							formData.append('image[]',file[i]);
 						}
 					}
-				console.log(formData.getAll('image[]'));
 				$.ajax({
 					url: 'upload.php',
 					type: 'POST',
@@ -208,11 +241,10 @@
 					cache: false,            
 					processData:false,
 					success: function(data){
-						$("#data").load("References_subscription.php");
+						get(ref_id,geturl,sendurl,showid);
 						var percentVal = '100%';
 						percent.width(percentVal)
 						percent.html(percentVal);
-						console.log(data);
 					},
 					beforeSend: function() {
 					var percentVal = '0%';
@@ -232,6 +264,8 @@
 			});
 			$('#file').change(function(){
 				file=[];
+				view=0;
+				pic_num=0;
 				percentVal = '0%';
 				percent.width(percentVal)
 				percent.html(percentVal);
@@ -240,52 +274,35 @@
 				{
 					file[i]=files[i];
 				}
-				view=0;
-				rows=0;
-				for(var i=0; i<file.length; i++)
+				var result;
+				result=checktype(file,load);
+				if(result==false)
 				{
-					var imagefile = file[i].type;
-					var match= ["image/jpeg","image/png","image/jpg"];
-					if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
-					{
-						alert("Nem megfelelő formátum!");
-						$('#image').attr('src', 'Pictures/pic.jpg');
-						return false;
-					}
-					else
-					{
-						var reader = new FileReader();
-						reader.readAsDataURL(file[i]);
-						var pic_num=0;
-						reader.onload = function(e)
-						{
-							if(view==0)
-							{
-								$('#preview').html("<div class='row well well-sm elem'><div class='col-sm-3'><img src='"+e.target.result+"'  title='"+pic_num+"' class='img img-responsive' style=' width: 100px; height: 100px' /></div><div class='col-sm-9'><button type='button' class='close remove' id='"+pic_num+"' >&cross;</button></div></div>");
-								view=1;
-							}
-							else
-								$('#preview').append("<div class='row well well-sm elem'><div class='col-sm-3'><img src='"+e.target.result+"' title='"+pic_num+"' class='img img-responsive' style=' width: 100px; height: 100px' /></div><div class='col-sm-9'><button type='button' class='close remove' id='"+pic_num+"' >&cross;</button></div></div>");
-							pic_num=pic_num+1;
-							
-						}
-					}
+					file=0;
+					$('#preview').html("<img id='image' src='Pictures/pic.jpg' class='img-thumbnail img-responsive' style=' width: 350px; height: 350px' />");
+					return false;
 				}
 				return false;
 			});
 			$('#preview ').on('click', '.remove', function() {
 						$(this).parentsUntil('#preview').remove();
 						var image_num=$(this).attr('id');
-						console.log(image_num);
-						console.log(file);
-						console.log(files);
 						file.splice(file.indexOf(files[image_num]),1);
-						console.log(file);
-						console.log(files);
 						if(file.length==0)
 								$('#preview').html("<img id='image' src='Pictures/pic.jpg' class='img-thumbnail img-responsive' style=' width: 350px; height: 350px' />");
 						return false;
 					});
+			function load(e){
+				if(view==0)
+				{
+					$('#preview').html("<div class='row well well-sm elem'><div class='col-sm-3'><img src='"+e.target.result+"'  title='"+pic_num+"' class='img img-responsive' style=' width: 100px; height: 100px' /></div><div class='col-sm-9'><button type='button' class='close remove' id='"+pic_num+"' >&cross;</button></div></div>");
+					view=1;
+				}
+				else
+					$('#preview').append("<div class='row well well-sm elem'><div class='col-sm-3'><img src='"+e.target.result+"' title='"+pic_num+"' class='img img-responsive' style=' width: 100px; height: 100px' /></div><div class='col-sm-9'><button type='button' class='close remove' id='"+pic_num+"' >&cross;</button></div></div>");
+					pic_num=pic_num+1;
+			};
+
 		});
 	</script>
 </body>

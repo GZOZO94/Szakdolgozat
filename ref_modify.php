@@ -1,36 +1,39 @@
 ﻿<?php
-include('connection_database.php');
-$res=pg_query($con,"select * from ref");
-while($result=pg_fetch_array($res))
-{
-	if(isset($_POST['Id']) && $_POST['Id']==$result['ref_id'])
-	{
-		echo "<div class='row'>
-				<div class='col-sm-4'>
-					<div class='panel panel-primary'>
-							<div class='panel-heading'></div>
-					<div class='panel-body'>
-						<ul class='list-group'>
-							<li class='list-group-item'><p>Cím: <span>".$result["title"]."</span><button type='button' class='close title'>&#9776;</button></p></li>
-							<li class='list-group-item'><form class='".$result["ref_id"]."'><div class='form-group'><label class='sr-only'>Cím</label><input class='form-control' name='title' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-							<li class='list-group-item'><p>Bejegyzés: <span>".$result["text"]."</span><button type='button' class='close text'>&#9776;</button></p></li>
-							<li class='list-group-item'><form class='".$result["ref_id"]."'><div class='form-group'><label class='sr-only'>Hozzászólás</label><input class='form-control' name='text' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-						</ul>
-					</div>
-					</div>
+$data=json_decode(file_get_contents('php://input'),TRUE);
+echo "<div class='row'>
+			<div class='col-sm-4'>
+				<div class='panel panel-primary'>
+						<div class='panel-heading'></div>
+				<div class='panel-body'>
+					<ul class='list-group'>
+						<li class='list-group-item'><p>Cím: <span>".$data["title"]."</span><button type='button' class='close title'>&#9776;</button></p></li>
+						<li class='list-group-item'><form class='".$data["ref_id"]."'><div class='form-group'><label class='sr-only'>Cím</label><input class='form-control' name='title' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+						<li class='list-group-item'><p>Bejegyzés: <span>".$data["text"]."</span><button type='button' class='close text'>&#9776;</button></p></li>
+						<li class='list-group-item'><form class='".$data["ref_id"]."'><div class='form-group'><label class='sr-only'>Hozzászólás</label><input class='form-control' name='text' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+					</ul>
 				</div>
-				<div class='col-sm-8'>
-					<div class='modify_picture'>
-						<img src='Uploads/".$result['prof_picture']."' alt='".$result['prof_picture']."' class='img img-responsive img-thumbnail center-block'/><br />
-						<button type='button' class='btn btn-primary center-block' id='".$result['ref_id']."'>Csere</button>
-					</div>
-				</div>
-			</div>";
-	}
-}
+			</div>
+		</div>
+		<div class='col-sm-8'>
+			<div class='modify_picture'>
+				<img src='Uploads/".$data['prof_picture']."' alt='".$data['prof_picture']."' class='img img-responsive img-thumbnail center-block'/><br />
+				<button type='button' class='btn btn-primary center-block' id='".$data['ref_id']."'>Csere</button>
+			</div>
+		</div>
+	</div>";
 ?>
 <script>
+function imageload(e){
+	$('.modify_picture').children('img').attr('src',e.target.result);
+	return false;
+};
+function show(option){
+	$(option).parents('li').hide(1000);
+	$(option).parents('li').next().show(1000);
+	return false;
+};
 $(document).ready(function(){
+		var file=0;
 		$('.modify_picture').on('dragover', function(){
 			$('.modify_picture').addClass('drag');
 			return false;
@@ -43,36 +46,17 @@ $(document).ready(function(){
 			e.preventDefault();
 			$('.modify_picture').removeClass('drag');
 			file=e.originalEvent.dataTransfer.files;
-			var imagefile = file[0].type;
-			var match= ["image/jpeg","image/png","image/jpg"];
-			if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
-				{
-					alert("Nem megfelelő formátum!");
-					$('#image').attr('src', 'Pictures/pic.jpg');
-					return false;
-				}
-			else
-			{
-				var reader = new FileReader();
-				reader.addEventListener("load", function () {
-					$('.modify_picture').children('img').attr('src',reader.result);
-				}, false);
-
-				if (file[0]) {
-					reader.readAsDataURL(file[0]);
-				}
-			}
+			file=file[0];
+			showfile(file,imageload);
 			return false;
 		});
 		$('.list-group').find('form').parents('li').hide();
 		$('.title').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
+			show('.title');
 			return false;
 		});
 		$('.text').on('click',function(){
-			$(this).parents('li').hide(1000);
-			$(this).parents('li').next().show(1000);
+			show('.text');
 			return false;
 		});
 		$('.reset').on('click',function(){
@@ -91,12 +75,25 @@ $(document).ready(function(){
 			type: 'POST',
 			data: formData,
 			contentType: false,       
-			cache: false,            
+			cache: false,  
 			processData:false,
 			success: function(data){
-					i.parents('li').hide(1000);
-					i.parents('li').prev().children('p').children('span').html(data)
-					i.parents('li').prev().show(1000);
+					var result=0;
+					var res=jQuery.parseJSON(data);
+					if(res.title)
+					{
+						result=res.title;
+					}
+					else if(res.text)
+					{
+						result=res.text;
+					}
+					if(result!=0)
+					{
+						i.parents('li').hide(1000);
+						i.parents('li').prev().children('p').children('span').html(result);
+						i.parents('li').prev().show(1000);
+					}
 				}
 			});
 			return false;
@@ -107,7 +104,7 @@ $(document).ready(function(){
 			if(file!=0)
 			{
 				formData.delete('file');
-				formData.append('file',file[0]);
+				formData.append('file',file);
 				formData.append('ref_id',ref_id);
 			$.ajax({
 				url: 'reference_modify.php',
@@ -118,7 +115,6 @@ $(document).ready(function(){
 				processData:false,
 				success: function(data){
 						file=0;
-						console.log(data);
 					}
 				});
 			}

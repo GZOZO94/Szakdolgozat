@@ -4,10 +4,10 @@
 	$file='pic.jpg';
 	if(isset($_FILES["file"]["type"]))
 		{
-			$validextensions = array("jpeg", "jpg", "png");
+			$validextensions = array("jpeg", "jpg", "png",'JPG','PNG','JPEG'); //A támogatott formátumok
 			$temporary = explode(".", $_FILES["file"]["name"]);
-			$file_extension = end($temporary);
-			if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) 
+			$file_extension = end($temporary);//A fájlformátum
+			if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) //Ha megfelel az adott fájl fájlformátuma
 				{
 					if ($_FILES["file"]["error"] > 0)
 					{
@@ -22,8 +22,8 @@
 					}
 				}
 		}
-		include('connection_database.php');
-		if(isset($_POST["title"]) && isset($_POST["txt"]))
+		include('connection_database.php');//Kapcsolódás az adatbázishoz
+		if(isset($_POST["title"]) && isset($_POST["txt"])) //A cím, és a rövid leírás megadása kötelezõ
 		{
 			$title=$_POST["title"];
 			$txt=$_POST["txt"];

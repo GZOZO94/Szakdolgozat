@@ -1,12 +1,13 @@
 ﻿<?php
+if(isset($_POST['Id']))
+{
 	$data=array();
 	$error=array();
-include('connection_database.php');
-	$res=pg_query($con,"select * from users");
+	include('connection_database.php');
+	$query=sprintf('select * from users where "Id"=%d',$_POST['Id']);
+	$res=pg_query($con,$query);
 	while($result=pg_fetch_array($res))
 	{
-		if(isset($_POST['Id']) && $_POST['Id']==$result['Id'])
-		{
 			if(isset($_FILES["file"]["type"]))
 			{
 				$temporary = explode(".", $_FILES["file"]["name"]);
@@ -40,7 +41,7 @@ include('connection_database.php');
 			if(isset($_POST['username']) && $_POST['username']!=NULL)
 			{
 				$eye=0;
-				$result2=pg_query($con,"select * from users");
+				$result2=pg_query($con,"select * from user");
 				while($result3=pg_fetch_array($result2))
 				{
 					if($result3['user_name']==$_POST['username'] && $_POST['Id']!=$result3['Id'])
@@ -108,8 +109,8 @@ include('connection_database.php');
 				pg_query($con,$query);
 				$data['message']=$_POST['message'];
 			}
-		}
 	}
 	$data['error']=$error;
 	echo json_encode($data);
+}
 ?>

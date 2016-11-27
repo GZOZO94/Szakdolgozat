@@ -14,6 +14,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
+	<script src="tests.js"></script>
 	<style type="text/css">
 	.drag{
 		border: 2px dashed #ccc; 
@@ -73,13 +74,49 @@
 	</div>
 	<div class="container-fluid">
 		<div id="user_data">
-		<?php
-			include('Users_data.php'); /*A felhasználók adatainak a kilistázása php kóddal*/
-		?>
 		</div>
 	</div>
 	<div class="container-fluid text-center">
 		<p>Copyright &copy; The future software 2016</p>
 	</div>
+	<script>
+	function showdata(data,sendurl,showid){
+		$.ajax({
+			url: sendurl,
+			type: 'POST',
+			data: JSON.stringify(data),
+			contentType: 'application/json',       
+			cache: false,            
+			processData:false,
+			success: function(result){
+				$(showid).html(result);
+			}
+		});
+		return false;
+	};
+	function getdata(geturl,sendurl,showid)
+	{
+		$.ajax({
+			url: geturl,
+			type: 'POST',
+			data: "",
+			contentType: false,       
+			cache: false,            
+			processData:false,
+			dataType: 'json',
+			success: function(data){
+				showdata(data,sendurl,showid);
+				console.log(data);
+			}
+		});
+		return false;
+	};
+	$(document).ready(function(){
+		var geturl='user_database.php';
+		var sendurl='Users_data.php';
+		var showid='#user_data';
+		getdata(geturl,sendurl,showid);
+		});
+	</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 ﻿<?php 
-	include('user_identification.php');
+	include('user_identification.php'); /*A felhasználó azonosítása*/
 ?>
 <!DOCTYPE HTML>
 <html lang="hu">
@@ -13,11 +13,6 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
-	<style>
-	.connection {
-		background: #A1A1F9;
-	}
-	</style>
 </head>
 <body>
 	<nav class="navbar navbar-inverse">
@@ -28,7 +23,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="index.php" class="navbar-brand">The Future Software</a>
+				<a href="index.php" class="navbar-brand ">The Future Software</a>
 			</div>
 			<div class="collapse navbar-collapse" id="hide">
 				<ul class="nav navbar-nav">

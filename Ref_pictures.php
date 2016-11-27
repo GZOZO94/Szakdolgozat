@@ -1,31 +1,26 @@
 <?php
-	if (session_status() == PHP_SESSION_NONE) 
-	{
-		session_start();
-	}
-	$rows=0;
-	include('connection_database.php');
-	$res=pg_query($con,"select * from pictures");
-	while($result=pg_fetch_array($res))
-	{
-	
-		if($_SESSION["ref_Id"]==$result['references_ref_id'])
-		{
+if (session_status() == PHP_SESSION_NONE) 
+{
+    session_start();
+}
+$rows=0;
+$data=json_decode(file_get_contents('php://input'),TRUE);
+foreach ($data as &$value) 
+{
 			if($rows%4==0)
 			{
 				echo "<div class='row'>";
 			}
 			$rows=$rows+1;
 			echo "<div class='col-sm-3'>";
-			if(isset($_SESSION["priority"]) && $_SESSION["priority"]<3) echo "<button type='button' class='close delete' id='".$result["pic_id"]."'>&cross;</button>";
+			if(isset($_SESSION["priority"]) && $_SESSION["priority"]<3) echo "<button type='button' class='close delete' id='".$value["pic_id"]."'>&cross;</button>";
 			echo
-					"<img class='img-thumbnail img-responsive center-block main' src='Uploads/".$result["pic_name"]."' alt='".$result["pic_name"]."' title='".$result["pic_name"]."' style='width:100px; height:100px'>
+					"<img class='img-thumbnail img-responsive center-block main' src='Uploads/".$value["pic_name"]."' alt='".$value["pic_name"]."' title='".$value["pic_name"]."' style='width:100px; height:100px'>
 				</div>";
 			if($rows%4==0)
 			{
 				echo "</div>";
 			}
-		}
 	}
 	if($rows%4!=0)
 		echo "</div>";
@@ -44,7 +39,11 @@ $(document).ready(function(){
 			cache: false,            
 			processData:false,
 			success: function(data){
-				$('.pics').load('Ref_pictures.php');
+				var geturl='ref_pictures_database.php';
+				var sendurl='Ref_pictures.php';
+				var showid='.pics';
+				var ref_id=<?php echo $value['References_ref_id'];?>;
+				get(ref_id,geturl,sendurl,showid);
 			}
 		});
 		return false;
@@ -66,3 +65,4 @@ $(document).ready(function(){
 	});
 });
 </script>
+<?php unset($value) ?>

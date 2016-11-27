@@ -23,7 +23,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a href="index.php" class="navbar-brand">The Future Software</a>
+				<a href="index.php" class="navbar-brand ">The Future Software</a>
 			</div>
 			<div class="collapse navbar-collapse" id="hide">
 				<ul class="nav navbar-nav">

@@ -9,18 +9,10 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/animsition/4.0.2/css/animsition.min.css" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animsition/4.0.2/js/animsition.min.js" charset="utf-8"></script>
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">	
-	<style type="text/css">
-	.profile_pic_over{
-		border: 2px dashed #ccc; 
-		text-align: center;
-	}
-	#prof_pic{
-		width: 200px;
-		height: 200px;
-	}
-	</style>
 </head>
 <body ng-app='myApp' ng-controller='myController'>
 	<nav class="navbar navbar-inverse">

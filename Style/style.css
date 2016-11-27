@@ -15,3 +15,24 @@ body {
   display: flex;
 }
 
+.badge-info {
+		background-color: #269abc;;
+	}
+.connection {
+		background: #A1A1F9;
+	}
+.badge-info {
+		background-color: #269abc;;
+	}
+.profile_pic_over{
+		border: 2px dashed #ccc; 
+		text-align: center;
+	}
+#prof_pic{
+		width: 200px;
+		height: 200px;
+	}
+.drag{
+		border: 2px dashed #ccc; 
+		text-align: center;
+	}

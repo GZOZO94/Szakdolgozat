@@ -14,7 +14,7 @@ if(isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 			$file=md5(uniqid(rand(), true)).".".$file_extension;
 			$targetPath = "Uploads/".$file;
 			move_uploaded_file($sourcePath,$targetPath);
-			$query=sprintf("insert into pictures(pic_name,References_ref_id) value('%s',%d)",pg_real_escape_string($file),$ref_Id);
+			$query=sprintf("insert into pictures(pic_name,references_ref_id) values('%s',%d)",pg_real_escape_string($file),$ref_Id);
 			pg_query($con,$query);
 		}
 		$textfile=md5(uniqid()).".txt";
@@ -71,7 +71,7 @@ else if(isset($_FILES['image']['tmp_name']))
 			$file=md5(uniqid(rand(), true)).".".$file_extension;
 			$targetPath = "Uploads/".$file;
 			move_uploaded_file($sourcePath,$targetPath);
-			$query=sprintf("insert into pictures(pic_name,references_ref_id) value('%s',%d)",pg_real_escape_string($file),$ref_Id);
+			$query=sprintf("insert into pictures(pic_name,references_ref_id) values('%s',%d)",pg_real_escape_string($file),$ref_Id);
 			pg_query($con,$query);
 		}
 		echo "Sikeres képfeltöltés!";

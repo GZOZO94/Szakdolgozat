@@ -1,16 +1,9 @@
 ﻿<?php
-	if (session_status() == PHP_SESSION_NONE) /*ha nincs futó munkafolyamat, akkor indítok egyet, hogy elérhessem a session változókat*/
-	{
-		session_start();
-	}
 	$rows=0; /*Ezzel tartom számon a kiírni kivánt elemek számát*/
-	include('connection_database.php'); /*kapcsolódok az adatbázishoz*/
-	$res=pg_query($con,"select * from users"); /*kilistázom a felhasználókat, a listázót kivéve*/
-	while($result=pg_fetch_array($res))
+	$data=json_decode(file_get_contents('php://input'),TRUE);
+	foreach ($data as &$value) 
 	{
-		if(isset($_SESSION["Id"]) && $_SESSION["Id"]!=$result["Id"] && isset($_SESSION["priority"]) && $_SESSION["priority"]==1)
-		{
-			$picture=$result["profile_pic"];
+			$picture=$value["profile_pic"];
 			if($rows%2==0)/*Egy sorban 2 elemet jelenítek meg, ezért, ha az elemek száma 2-vel osztva 0-át ad maradékul akkor új sort kell kezdenem*/
 			{
 				echo "<div class='row'>";
@@ -19,33 +12,33 @@
 			echo "<div class='col-sm-6'>
 					<div class='row well'>
 						<div class='col-sm-4 text-center well profile_picture'>
-							<img src='Profile/".$picture."' class='".$result["Id"]." img-thumbnail img-responsive center-block' style='width: 300px; height: 200px;' title='".$picture."' alt='".$picture."'><br />
-							<form class='".$result["Id"]." image_upload'><div class='form-group'><button type='submit' class='btn btn-primary'>Csere</button></div></form>
-							<button type='button' class='close delete' id='".$result["Id"]."'>&cross;</button>
+							<img src='Profile/".$picture."' class='".$value["Id"]." img-thumbnail img-responsive center-block' style='width: 300px; height: 200px;' title='".$picture."' alt='".$picture."'><br />
+							<form class='".$value["Id"]." image_upload'><div class='form-group'><button type='submit' class='btn btn-primary'>Csere</button></div></form>
+							<button type='button' class='close delete' id='".$value["Id"]."'>&cross;</button>
 						</div>
 						<div class='col-sm-6 well'>
 								<div class='panel panel-primary'>
 									<div class='panel-heading'>
 										<button type='button' class='close firstn_secondn'>&#9776;</button>
-										<h4 class='panel-title'>".$result["firstname"]." ".$result["lastname"]."</h4>
-										<form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Keresztnév</label><input class='form-control' name='firstname' placeholder='Keresztnév' value='".$result["firstname"]."' required /></div><div class='form-group'><label class='sr-only'>Vezetéknév</label><input class='form-control' name='lastname' placeholder='Vezetéknév' value='".$result["lastname"]."' required /><button type='button' class='close back'>&times;</button><button type='submit' class='close ok'>&#10004</button></div></form>
+										<h4 class='panel-title'>".$value["firstname"]." ".$value["lastname"]."</h4>
+										<form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Keresztnév</label><input class='form-control' name='firstname' placeholder='Keresztnév' value='".$value["firstname"]."' required /></div><div class='form-group'><label class='sr-only'>Vezetéknév</label><input class='form-control' name='lastname' placeholder='Vezetéknév' value='".$value["lastname"]."' required /><button type='button' class='close back'>&times;</button><button type='submit' class='close ok'>&#10004</button></div></form>
 									</div>
 									<div class='panel-body'><button type='button' class='btn btn-primary data'>Adatok</button>
 										<div class='collapse'>
 											 <ul class='list-group'>
-												<li class='list-group-item'><p>Felhasználónév: <span>".$result["user_name"]." </span><button type='button' class='close user_name'>&#9776;</button></p></li>
-												<li class='list-group-item user'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Felhasználóbév</label><input class='form-control' name='username' required /><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-												<li class='list-group-item'><p>Jelszó: <span>".$result["user_password"]."</span><button type='button' class='close password'>&#9776;</button></p></li>
-												<li class='list-group-item psw'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Jelszó</label><input class='form-control' name='password' required /><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-												<li class='list-group-item'><p>Email: <span>".$result["email"]."</span><button type='button' class='close email'>&#9776;</button></p></li>
-												<li class='list-group-item mail'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Email</label><input class='form-control' name='email' type='email' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-												<li class='list-group-item'><p>Születésnap: <span>".$result["birthdate"]."</span><button type='button' class='close birth'>&#9776;</button></p></li>
-												<li class='list-group-item bdate'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Születésnap</label><input class='form-control' name='birthdate' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-												<li class='list-group-item'><p>Telefoszám: <span>".$result["phone"]."</span><button type='button' class='close phone'>&#9776;</button></p></li>
-												<li class='list-group-item telephone'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Telefonszám</label><input class='form-control' name='phonenumber' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-												<li class='list-group-item'><p>Prioritási szint: <span>".$result["priority"]."</span><button type='button' class='close priority'>&#9776;</button></p></li>
-												<li class='list-group-item prio'><form class='".$result["Id"]."'><div class='form-group'><label class='sr-only'>Prioritás</label><input class='form-control' name='priority' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
-												<button type='button' class='".$result["Id"]." btn btn-primary list-group-item' ><p align='center'>Értesítés</p></button>
+												<li class='list-group-item'><p>Felhasználónév: <span>".$value["user_name"]." </span><button type='button' class='close user_name'>&#9776;</button></p></li>
+												<li class='list-group-item user'><form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Felhasználóbév</label><input class='form-control' name='username' required /><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<li class='list-group-item'><p>Jelszó: <span>".$value["user_password"]."</span><button type='button' class='close password'>&#9776;</button></p></li>
+												<li class='list-group-item psw'><form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Jelszó</label><input class='form-control' name='password' required /><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<li class='list-group-item'><p>Email: <span>".$value["email"]."</span><button type='button' class='close email'>&#9776;</button></p></li>
+												<li class='list-group-item mail'><form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Email</label><input class='form-control' name='email' type='email' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<li class='list-group-item'><p>Születésnap: <span>".$value["birthdate"]."</span><button type='button' class='close birth'>&#9776;</button></p></li>
+												<li class='list-group-item bdate'><form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Születésnap</label><input class='form-control' name='birthdate' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<li class='list-group-item'><p>Telefoszám: <span>".$value["phone"]."</span><button type='button' class='close phone'>&#9776;</button></p></li>
+												<li class='list-group-item telephone'><form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Telefonszám</label><input class='form-control' name='phonenumber' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<li class='list-group-item'><p>Prioritási szint: <span>".$value["priority"]."</span><button type='button' class='close priority'>&#9776;</button></p></li>
+												<li class='list-group-item prio'><form class='".$value["Id"]."'><div class='form-group'><label class='sr-only'>Prioritás</label><input class='form-control' name='priority' required/><button type='button' class='close reset'>&times;</button><button type='submit' class='close done'>&#10004</button></div></form></li>
+												<button type='button' class='".$value["Id"]." btn btn-primary list-group-item' ><p align='center'>Értesítés</p></button>
 											</ul>
 										</div>
 									</div>
@@ -58,11 +51,14 @@
 				echo "</div>";
 			}
 		}
-	}
 if($rows%2!=0)/* ha nem páros számú felhasználóm van, akkor is az utolsó után le kell zárnom a sort*/
 		echo "</div>";
+unset($value);
 ?>
 <script>
+	function add(a,b){
+			return a+b;
+		};
 	$(document).ready(function(){
 		var user; /* a felhasználó azonosítója*/
 		var changes=new Array(); /*ezzel tartom számon a változásokat*/
@@ -113,7 +109,7 @@ if($rows%2!=0)/* ha nem páros számú felhasználóm van, akkor is az utolsó u
 			});
 			return false;
 		};
-		function del(onclick,Url,whereload,whatload){
+		function del(onclick,Url,whereload,geturl,sendurl){
 			$(onclick).on('click',function(){
 				var formData=new FormData();
 				user=$(this).attr('id');/*Megmondom, hogy melyik felhasználót törölje*/
@@ -126,7 +122,7 @@ if($rows%2!=0)/* ha nem páros számú felhasználóm van, akkor is az utolsó u
 				cache: false,            
 				processData:false,
 				success: function(data){
-					$(whereload).load(whatload);/*Frissítem az oldal megfelelő részét, ezzel aszinkron törölve a felhasználót*/
+					getdata(geturl,sendurl,whereload);/*Frissítem az oldal megfelelő részét, ezzel aszinkron törölve a felhasználót*/
 					}
 				});
 				return false;
@@ -151,7 +147,7 @@ if($rows%2!=0)/* ha nem páros számú felhasználóm van, akkor is az utolsó u
 		/*Ha az x-re nyomok rá akkor visszavonom a modosítást, vagyis tünjön el a form, és jelenjen meg a felette lévő elem*/
 		back('.reset');
 		/*A felhasználó törlése*/
-		del('.delete','user_delete.php','#user_data','Users_data.php');
+		del('.delete','user_delete.php','#user_data','user_database.php','Users_data.php');
 		/*Az adatok gombra kattintva jelenjenek meg a felhasználó adatai*/
 		toggle_data('.data');
 		/*A felhasználó nevének a módosításához jelenjen meg a form, és tünjön el a felette lévő szöveg*/

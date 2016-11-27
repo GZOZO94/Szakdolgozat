@@ -15,10 +15,6 @@
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
 	<style>
-	.drag{
-		border: 2px dashed #ccc; 
-		text-align: center;
-	}
 	a{
 		text-decoration: none;
 		color: black;
@@ -104,11 +100,8 @@
 			<h1>Referenciák</h1>
 		</div>
 		<div id="references_about">
-				<?php
-					include("References_about.php");
-				?>
 		</div>
-				<?php
+		<?php
 		if($eye==1 && $_SESSION["priority"]<3)
 		{
 			echo
@@ -151,9 +144,6 @@
 					<h4 class="modal-title">Módosítás</h4>
 				</div>
 				<div class="modal-body" id="select">
-				<?php
-					include('ref_modify.php');
-				?>
 				</div>
 			</div>
 		</div>

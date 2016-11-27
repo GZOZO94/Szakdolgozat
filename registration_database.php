@@ -62,7 +62,7 @@
 							{
 								if(isset($_FILES["file"]["type"]))
 								{
-									$validextensions = array("jpeg", "jpg", "png");
+									$validextensions = array("jpeg", "jpg", "png","JPG","PNG","JPEG");
 									$temporary = explode(".", $_FILES["file"]["name"]);
 									$file_extension = end($temporary);
 									if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) 
@@ -81,8 +81,8 @@
 									}
 								}
 								$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%s','%s',%d)", pg_real_escape_string($user), pg_real_escape_string($psw1), pg_real_escape_string($firstn), pg_real_escape_string($secondn), pg_real_escape_string($email), pg_real_escape_string($phone),pg_real_escape_string($date), pg_real_escape_string($prof_pic),3);
-								pgi_query($con,$query);
-								$result=pgi_query($con,"select * from user");
+								pg_query($con,$query);
+								$result=pg_query($con,"select * from users");
 								while($result2=pg_fetch_array($result))
 								{
 									if($result2["user_name"]==$user && $psw1==$result2["user_password"])

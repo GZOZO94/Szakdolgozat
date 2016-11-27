@@ -23,16 +23,10 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/animsition/4.0.2/css/animsition.min.css" rel="stylesheet">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/animsition/4.0.2/js/animsition.min.js" charset="utf-8"></script>
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
-	<style>
-	.connection {
-		background: #A1A1F9;
-	}
-	.badge-info {
-		background-color: #269abc;;
-	}
-	</style>
 </head>
 <body ng-app='myApp' ng-controller='myCont'>
 	<nav class="navbar navbar-inverse">
@@ -104,7 +98,7 @@
 			<div class='col-sm-9'>
 				<div class='panel panel-primary'>
 					<div class='panel-heading'>
-						<h1>{{user.firstn}} {{user.secondn}}<small> Adataim</small></h1>
+						<h1>{{user.firstn}} {{user.secondn}}<small> Adataim</small><button type="button" ng-click='delete_user()' class="close">&times;</button></h1>
 					</div>
 					<div class='panel-body'>
 						<ul class='list-group'>
@@ -147,15 +141,19 @@
                })
                .success(function(data){
 					scope.user=data;
-					if(data.message=="" || data.message==null)
+					if(data.message=="" || data.message==0)
+					{
 						scope.notice=false;
+						data.message="";
+					}
 					else 
+					{
 						scope.notice=1;
-					console.log(data);
+					}
                });
             }
          }]);
-		  myApp.service('senddata', ['$http',function ($http) {
+		 myApp.service('senddata', ['$http',function ($http) {
             this.data = function(Id,data,Url,getdata,scope,file,counter){
                var fd = new FormData();
 			   for(x in data)
@@ -166,7 +164,6 @@
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
                }).success(function(data){
-					console.log(data);
 					if(data.error.length==0 && counter==1)
 						scope.res="Sikeres modosítás";
 					else if(data.error.date)
@@ -181,11 +178,20 @@
 					else
 						scope.res=false;
 			   });
-            }
+            };
+			this.del=function(Id,Url){
+				var fd=new FormData();
+				fd.append('Id',Id);
+				 $http.post(Url, fd, {
+                  transformRequest: angular.identity,
+                  headers: {'Content-Type': undefined}
+               }).success(function(data){
+					  location.href ='Logout.php';
+			   });
+			};
          }]);
 		myApp.controller('myCont',function($scope,getdata,senddata){
 			$scope.user={};
-			$scope.user.message="";
 			$scope.path='Profile/';
 			$scope.show_psw=false;
 			$scope.toggle_psw=function(){
@@ -213,11 +219,15 @@
 			var Url="profile_data.php";
 			var sendUrl='user_modify.php';
 			getdata.data(Id,Url,$scope);
+			$scope.delete_user=function(){
+				var url='user_delete.php'
+				senddata.del(Id,url);
+			}
 			$scope.getmessage=function(){
 				$scope.user.message="";
 				$scope.notice=false;
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
-			};
+			}
 			$scope.send=function(){
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
 				counter=0;
