@@ -155,7 +155,6 @@
          }]);
 		 myApp.service('senddata', ['$http',function ($http) {
             this.data = function(Id,data,Url,getdata,scope,file,counter){
-				console.log(Id);
                var fd = new FormData();
 			   for(x in data)
 					fd.append(x,data[x]);
@@ -165,7 +164,8 @@
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
                }).success(function(data){
-					console.log(Id);
+					console.log('hello2');
+					console.log(data);
 					if(data.error.length==0 && counter==1)
 						scope.res="Sikeres modosítás";
 					else if(data.error.date)

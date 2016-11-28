@@ -1,4 +1,5 @@
 ﻿<?php
+echo "hello";
 if(isset($_POST['Id']))
 {
 	$data=array();
