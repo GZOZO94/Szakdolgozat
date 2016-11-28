@@ -235,7 +235,7 @@
 			};
 			$scope.filechange=function(e){
 				file=e.files[0];
-				console.log(file;)
+				console.log(file);
 				counter=1;
 				var reader = new FileReader();
 				reader.onload = function(event)
