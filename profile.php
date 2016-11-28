@@ -140,6 +140,7 @@
                   headers: {'Content-Type': undefined}
                })
                .success(function(data){
+					console.log(data);
 					scope.user=data;
 					if(data.message=="" || data.message==0)
 					{
@@ -235,7 +236,6 @@
 			};
 			$scope.filechange=function(e){
 				file=e.files[0];
-				console.log(file);
 				counter=1;
 				var reader = new FileReader();
 				reader.onload = function(event)
