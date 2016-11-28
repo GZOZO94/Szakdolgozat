@@ -163,9 +163,8 @@
                $http.post(Url, fd, {
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
-               }).success(function(data){
-					console.log('hello2');
-					console.log(data);
+               })
+			   .success(function(data){
 					if(data.error.length==0 && counter==1)
 						scope.res="Sikeres modosítás";
 					else if(data.error.date)
