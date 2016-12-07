@@ -16,7 +16,7 @@ if(isset($_POST['Id']))
 				$file=md5(uniqid()).".".$file_extension;
 				$targetPath = "Profile/".$file; 
 				move_uploaded_file($sourcePath,$targetPath);
-				$query=sprintf("update users set profile_pic='%s' where \"Id\"=%d",pg_real_escape_string($file),$_POST['Id']);
+				$query=sprintf("update users set profile_pic='%s' where \"Id\"=%d",pg_escape_string($file),$_POST['Id']);
 				pg_query($con,$query);	
 				$filename=$result["profile_pic"];
 				if($filename!='Profile.jpg')
@@ -28,13 +28,13 @@ if(isset($_POST['Id']))
 			}
 			if(isset($_POST['firstname']) && $_POST['firstname']!=NULL)
 			{
-				$query=sprintf("update users set firstname='%s' where \"Id\"=%d",pg_real_escape_string($_POST['firstname']),$_POST['Id']);
+				$query=sprintf("update users set firstname='%s' where \"Id\"=%d",pg_escape_string($_POST['firstname']),$_POST['Id']);
 				pg_query($con,$query);
 				$data['firstname']=$_POST['firstname'];
 			}
 			if(isset($_POST['lastname']) && $_POST['lastname']!=NULL)
 			{
-				$query=sprintf("update users set lastname='%s' where \"Id\"=%d",pg_real_escape_string($_POST['lastname']),$_POST['Id']);
+				$query=sprintf("update users set lastname='%s' where \"Id\"=%d",pg_escape_string($_POST['lastname']),$_POST['Id']);
 				pg_query($con,$query);
 				$data['lastname']=$_POST['lastname'];
 			}
@@ -49,7 +49,7 @@ if(isset($_POST['Id']))
 				}
 				if($eye==0)
 				{
-					$query=sprintf("update users set user_name='%s' where \"Id\"=%d",pg_real_escape_string($_POST['username']),$_POST['Id']);
+					$query=sprintf("update users set user_name='%s' where \"Id\"=%d",pg_escape_string($_POST['username']),$_POST['Id']);
 					pg_query($con,$query);
 					$data['username']=$_POST['username'];
 				}
@@ -58,13 +58,13 @@ if(isset($_POST['Id']))
 			}
 			if(isset($_POST['password']) && $_POST['password']!=NULL)
 			{
-				$query=sprintf("update users set user_password='%s' where \"Id\"=%d",pg_real_escape_string($_POST['password']),$_POST['Id']);
+				$query=sprintf("update users set user_password='%s' where \"Id\"=%d",pg_escape_string($_POST['password']),$_POST['Id']);
 				pg_query($con,$query);
 				$data['password']=$_POST['password'];
 			}
 			if(isset($_POST['email']) && $_POST['email']!=NULL)
 			{
-				$query=sprintf("update users set email='%s' where \"Id\"=%d",pg_real_escape_string($_POST['email']),$_POST['Id']);
+				$query=sprintf("update users set email='%s' where \"Id\"=%d",pg_escape_string($_POST['email']),$_POST['Id']);
 				pg_query($con,$query);
 				$data['email']=$_POST['email'];
 			}
@@ -72,7 +72,7 @@ if(isset($_POST['Id']))
 			{
 				if (preg_match("/^(06[0-9]{9})$/", $_POST['phonenumber']))
 				{
-					$query=sprintf("update users set phone='%s' where \"Id\"=%d",pg_real_escape_string($_POST['phonenumber']),$_POST['Id']);
+					$query=sprintf("update users set phone='%s' where \"Id\"=%d",pg_escape_string($_POST['phonenumber']),$_POST['Id']);
 					pg_query($con,$query);
 					$data['phonenumber']=$_POST['phonenumber'];
 				}
@@ -84,7 +84,7 @@ if(isset($_POST['Id']))
 			{
 				if(0<$_POST['priority'] && $_POST['priority']<4)
 				{
-					$query=sprintf("update users set priority=%d where \"Id\"=%d",pg_real_escape_string($_POST['priority']),$_POST['Id']);
+					$query=sprintf("update users set priority=%d where \"Id\"=%d",pg_escape_string($_POST['priority']),$_POST['Id']);
 					pg_query($con,$query);
 					$data['priority']=$_POST['priority'];
 				}
@@ -95,7 +95,7 @@ if(isset($_POST['Id']))
 			{
 				if (preg_match("/^[0-9]{4}.(0[1-9]|1[0-2]).(0[1-9]|[1-2][0-9]|3[0-1])$/", $_POST['birthdate']))
 				{
-					$query=sprintf("update users set birthdate='%s' where \"Id\"=%d",pg_real_escape_string($_POST['birthdate']),$_POST['Id']);
+					$query=sprintf("update users set birthdate='%s' where \"Id\"=%d",pg_escape_string($_POST['birthdate']),$_POST['Id']);
 					pg_query($con,$query);
 					$data['birthdate']=$_POST['birthdate'];
 				}
@@ -105,7 +105,7 @@ if(isset($_POST['Id']))
 			}
 			if(isset($_POST['message']))
 			{
-				$query=sprintf("update users set message='%s' where \"Id\"=%d",pg_real_escape_string($_POST['message']),$_POST['Id']);
+				$query=sprintf("update users set message='%s' where \"Id\"=%d",pg_escape_string($_POST['message']),$_POST['Id']);
 				pg_query($con,$query);
 				$data['message']=$_POST['message'];
 			}
