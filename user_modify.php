@@ -75,9 +75,17 @@ if(isset($_POST['Id']))
 			}
 			if(isset($_POST['email']) && $_POST['email']!=NULL)
 			{
-				$query=sprintf("update users set email='%s' where \"Id\"=%d",pg_escape_string($_POST['email']),$_POST['Id']);
-				pg_query($con,$query);
-				$data['email']=$_POST['email'];
+				if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+				{
+					$query=sprintf("update users set email='%s' where \"Id\"=%d",pg_escape_string($_POST['email']),$_POST['Id']);
+					pg_query($con,$query);
+					$data['email']=$_POST['email'];
+				}
+				else
+				{
+					$error['email']='Email error';
+				}
+				
 			}
 			if(isset($_POST['phonenumber']) && $_POST['phonenumber']!=NULL)
 			{
@@ -88,7 +96,7 @@ if(isset($_POST['Id']))
 					$data['phonenumber']=$_POST['phonenumber'];
 				}
 				else{
-					$error['phone']='Phone error';
+					$error['phone']='Email error';
 				}
 			}
 			if(isset($_POST['priority']) && $_POST['priority']!=NULL)

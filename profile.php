@@ -178,6 +178,10 @@
 						scope.res="Hiba történt: "+data.error.phone+". A telefonszám nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
 					}
+					else if(data.error.email){
+						scope.res="Hiba történt: "+data.error.email+". Az email cím nem került modosításra!";
+						getdata.data(Id,'profile_data.php',scope);
+					}
 					else
 						scope.res=false;
 			   });
