@@ -40,7 +40,7 @@
 			{
 				if($psw2==$psw1 )
 				{
-					$result0=pg_query($con,"select * from users");
+					$result=pg_query($con,"select * from users");
 					while($result0=pg_fetch_array($result))
 					{
 						if($user==$result0["user_name"])
@@ -80,7 +80,7 @@
 										}
 									}
 								}
-								$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%s','%s',%d)", pg_real_escape_string($user), pg_real_escape_string($psw1), pg_real_escape_string($firstn), pg_real_escape_string($secondn), pg_real_escape_string($email), pg_real_escape_string($phone),pg_real_escape_string($date), pg_real_escape_string($prof_pic),3);
+								$query=sprintf("insert into users(user_name,user_password,firstname,lastname,email,phone,birthdate,profile_pic,priority) values('%s','%s','%s','%s','%s','%s','%s','%s',%d)", pg_escape_string($user), pg_escape_string($psw1), pg_escape_string($firstn), pg_escape_string($secondn), pg_escape_string($email), pg_escape_string($phone),pg_escape_string($date), pg_escape_string($prof_pic),3);
 								pg_query($con,$query);
 								$result=pg_query($con,"select * from users");
 								while($result2=pg_fetch_array($result))
