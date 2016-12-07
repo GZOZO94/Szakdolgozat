@@ -40,7 +40,7 @@
 			{
 				if($psw2==$psw1 )
 				{
-					$result=pg_query($con,"select * from users");
+					$result0=pg_query($con,"select * from users");
 					while($result0=pg_fetch_array($result))
 					{
 						if($user==$result0["user_name"])
