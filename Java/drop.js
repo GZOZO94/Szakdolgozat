@@ -1,4 +1,5 @@
-﻿function showdata(data,sendurl,showid){
+﻿var file=0;
+function showdata(data,sendurl,showid){
 		$.ajax({
 			url: sendurl,
 			type: 'POST',
@@ -24,12 +25,11 @@
 			dataType: 'json',
 			success: function(data){
 				showdata(data,sendurl,showid);
-				console.log(data);
 			}
 		});
 		return false;
 	};
-	function showfile(file,openfunction)
+	function showfile(openfunction)
 	{
 		var imagefile = file.type;
 		var match= ["image/jpeg","image/png","image/jpg"];
@@ -37,6 +37,7 @@
 		{
 			alert("Nem megfelelő formátum!");
 			$('#image').attr('src', 'Pictures/pic.jpg');
+			file=0;
 			return false;
 		}
 		else
@@ -51,7 +52,6 @@
 				$('#image').attr('src', e.target.result);
 			};
 $(document).ready(function(){
-	var file=0;
 	var ref_id;
 	var geturl='references_database.php';
 	var sendurl='References_about.php';
@@ -70,15 +70,15 @@ $(document).ready(function(){
 			$('.drag_over').removeClass('drag');
 			file=e.originalEvent.dataTransfer.files;
 			file=file[0];
-			showfile(file,imageIsLoaded);
+			showfile(imageIsLoaded);
 		return false;
 		});
 	$("#image_upload").on('submit',function(e){
 		e.preventDefault();
 		var formData= new FormData(this);
+		formData.delete('file');
 		if(file!=0)
 		{
-			formData.delete('file');
 			formData.append('file',file);
 		}
 		$.ajax({
@@ -95,8 +95,8 @@ $(document).ready(function(){
 		return false;
 		});
 	$('#file').change(function(){
-		var files = this.files[0];
-		showfile(files,imageIsLoaded);
+		file= this.files[0];
+		showfile(imageIsLoaded);
 		});
 	$('#modify').on('hidden.bs.modal',function(){
 		getdata(geturl,sendurl,showid);

@@ -1,14 +1,14 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) /*ha nincs futó munkafolyamat, akkor indítok egyet, hogy elérhessem a session változókat*/
+if (session_status() == PHP_SESSION_NONE) 
 	{
 		session_start();
 	}
 $data=array();
 include('connection_database.php');
-$res=pg_query($con,"select * from users"); /*kilistázom a felhasználókat, a listázót kivéve*/
+$res=pg_query($con,"select * from user"); 
 while($result=pg_fetch_array($res))
 {
-	if(isset($_SESSION["Id"]) && $_SESSION["Id"]!=$result["Id"] && isset($_SESSION["priority"]) && $_SESSION["priority"]==1)
+	if(((isset($_COOKIE["Id"]) && $_COOKIE["Id"]!=$result["Id"]) || (isset($_SESSION["Id"]) && $_SESSION["Id"]!=$result["Id"])) && isset($_SESSION["priority"]) && $_SESSION["priority"]==1)
 	{
 		$Id=$result['Id'];
 		$data[$Id]['Id']=$Id;

@@ -1,33 +1,36 @@
 ﻿<?php 
-	session_start(); /*munkafolyamat elindítása*/
-	$eye=0;/*ha be vagyunk jelenkezve, akkor 1-be állítom, ezzel bizonyos elemekt megjlenítek, másokat elrejtek*/
-	$error=false; /*ha nem sikerül a bejelentkezés errort kapunk */
-	$message=0; /*abban az esetben, ha van üzenetünk az jeleznünk kell*/
-	if(isset($_SESSION["Id"])) /*megvizsgálom, hogy bejelentkeztünk-e*/
+	session_start(); 
+	$eye=0;
+	$error=false; 
+	$message=0;
+	if((isset($_COOKIE["Id"]) && $_COOKIE['Id']!='error') || isset($_SESSION['Id'])) 
 	{
-		$Id=$_SESSION["Id"]; /*ha igen, akkor az $Id legyen a felhasználói azonosító*/
-		$eye=1; /*ha be vagyunk jelenkezve, akkor 1-be állítom, ezzel bizonyos elemekt megjlenítek, másokat elrejtek*/
-		$error=$_SESSION["Error"]; /*akkor az $error hamis értéket vesz fel*/
-		include('connection_database.php'); /*kapcsolódás az adatbázishoz*/
-		$query=sprintf("select profile_pic from users where \"Id\"=%d",$Id);/*megkeresem a profilképet*/
+		if(isset($_SESSION['Id']))
+			$Id=$_SESSION['Id'];
+		else
+			$Id=$_COOKIE["Id"]; 
+		$eye=1; 
+		$error=false; 
+		include('connection_database.php'); 
+		$query=sprintf("select profile_pic from users where \"Id\"=%d",$Id);
 		$result=pg_query($con,$query);
 		$result2=pg_fetch_array($result);
 		$profile_picture=$result2["profile_pic"];
-		$query=sprintf("select message from users where \"Id\"=%d",$Id); /*megkeresem, hogy van-e üzenet*/
+		$query=sprintf("select message from users where \"Id\"=%d",$Id); 
 		$result=pg_query($con,$query);
 		$result2=pg_fetch_array($result);
 		if($result2['message']!=NULL && $result2['message']!='0')
 				$message=1;
 		else
 			$message=0;
-		$query=sprintf("select priority from users where \"Id\"=%d",$Id);/*megvizsgálom a felhasználó prioritását*/
+		$query=sprintf("select priority from users where \"Id\"=%d",$Id);
 		$result=pg_query($con,$query);
 		$result2=pg_fetch_array($result);
 		$_SESSION['priority']=$result2['priority'];
 	}
-	else if(isset($_SESSION["Error"]))
+	else if(isset($_COOKIE["Id"]) && $_COOKIE["Id"]=='error')
 	{
-		$error=$_SESSION["Error"];
+		$error=true;
 		$eye=0;
 	}
 	else
@@ -46,7 +49,7 @@
 	<script src="Java/my_jquery.js"></script>
 	<link rel="stylesheet" href="Style/style.css" type="text/css">
 	<script>
-	/*ezzel a függvénnyel azt állítom be, hogy ha a főikonra kattintanak "rollozva" jussunk el a leíráshoz*/
+	
 	$(document).ready(function(){
 		$(".navbar-brand").click(function(e){
 			e.preventDefault();
@@ -60,12 +63,13 @@
 	</script>
 </head>
 <body>
-<?php if($error==true)
+<?php if($error)
 {
-/*Ha hibás a jelszó, vagy a felhasználónév azt jelezni kell*/
+
 echo "<script type='text/javascript'>$(function(){alert('Hibás jelszó vagy felhasználónév!');});</script>";
-unset($_SESSION["Id"]);
-unset($_SESSION["Error"]);
+setcookie("Id", "", time()-3600);
+setcookie("Error", "", time()-3600);
+unset($_SESSION['Id']);
 }
 ?>
 	<nav class="navbar navbar-inverse">

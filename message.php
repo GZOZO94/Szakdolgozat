@@ -44,7 +44,7 @@ if(isset($_POST['Id']) && $_POST['Id']!=NULL)
 			}
 	if($text!="")
 	{
-		$query=sprintf("update users set message='%s' where \"Id\"=%d",pg_real_escape_string($text),$_POST['Id']);
+		$query=sprintf("update users set message='%s' where \"Id\"=%d",pg_escape_string($text),$_POST['Id']);
 		pg_query($con,$query);
 	}
 	echo $text;

@@ -61,7 +61,7 @@ $(document).ready(function(){
 	});
 	$('#pictures').on('hidden.bs.modal',function(){
 		geturl='ref_pictures_database.php';
-		sendurl='References_subscription.php';
+		sendurl='References_subscription.php?ref_id='+ref_id;
 		showid='#data';
 		get(ref_id,geturl,sendurl,showid);
 		return false;

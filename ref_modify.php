@@ -23,6 +23,7 @@ echo "<div class='row'>
 	</div>";
 ?>
 <script>
+var picture=0;
 function imageload(e){
 	$('.modify_picture').children('img').attr('src',e.target.result);
 	return false;
@@ -32,8 +33,26 @@ function show(option){
 	$(option).parents('li').next().show(1000);
 	return false;
 };
+function showpicture(openfunction)
+	{
+		var imagefile = picture.type;
+		var match= ["image/jpeg","image/png","image/jpg"];
+		if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+		{
+			alert("Nem megfelelő formátum!");
+			$('#image').attr('src', 'Pictures/pic.jpg');
+			picture=0;
+			return false;
+		}
+		else
+		{
+			var reader = new FileReader();
+			reader.onload = openfunction;
+			reader.readAsDataURL(picture);
+		}
+		return true;
+	}
 $(document).ready(function(){
-		var file=0;
 		$('.modify_picture').on('dragover', function(){
 			$('.modify_picture').addClass('drag');
 			return false;
@@ -45,9 +64,9 @@ $(document).ready(function(){
 		$('.modify_picture').on('drop', function(e){
 			e.preventDefault();
 			$('.modify_picture').removeClass('drag');
-			file=e.originalEvent.dataTransfer.files;
-			file=file[0];
-			showfile(file,imageload);
+			picture=e.originalEvent.dataTransfer.files;
+			picture=picture[0];
+			showpicture(imageload);
 			return false;
 		});
 		$('.list-group').find('form').parents('li').hide();
@@ -101,10 +120,10 @@ $(document).ready(function(){
 		$('.modify_picture').children('button').on('click',function(){
 			ref_id=$(this).attr('id');
 			var formData= new FormData();
-			if(file!=0)
+			if(picture!=0)
 			{
 				formData.delete('file');
-				formData.append('file',file);
+				formData.append('file',picture);
 				formData.append('ref_id',ref_id);
 			$.ajax({
 				url: 'reference_modify.php',
@@ -114,7 +133,7 @@ $(document).ready(function(){
 				cache: false,            
 				processData:false,
 				success: function(data){
-						file=0;
+						picture=0;
 					}
 				});
 			}

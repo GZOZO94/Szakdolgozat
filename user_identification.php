@@ -1,11 +1,13 @@
 <?php
-	/*ezzel a php fájllal azonosítom a felhasználót, és hozzá tartozó szükséges adatokat lekérdezem*/
 	session_start();
 	$eye=0;
 	$message=0;
-	if(isset($_SESSION["Id"]))
+	if(isset($_COOKIE["Id"]) || isset($_SESSION["Id"]))
 	{
-		$Id=$_SESSION["Id"];
+		if(isset($_SESSION['Id']))
+			$Id=$_SESSION['Id'];
+		else
+			$Id=$_COOKIE["Id"]; 
 		$eye=1;
 		include('connection_database.php');
 		$query=sprintf("select profile_pic from users where \"Id\"=%d",$Id);
@@ -28,7 +30,5 @@
 		$_SESSION['priority']=$result2['priority'];
 	}
 	else
-	{
 		$eye=0;
-	}
 ?>

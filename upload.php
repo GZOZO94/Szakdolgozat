@@ -1,6 +1,6 @@
 ﻿<?php
 session_start();
-$ref_Id=$_SESSION["ref_Id"];
+$ref_Id=$_GET["ref_Id"];
 include('connection_database.php');
 if(isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 	{
@@ -14,7 +14,7 @@ if(isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 			$file=md5(uniqid(rand(), true)).".".$file_extension;
 			$targetPath = "Uploads/".$file;
 			move_uploaded_file($sourcePath,$targetPath);
-			$query=sprintf("insert into pictures(pic_name,references_ref_id) values('%s',%d)",pg_real_escape_string($file),$ref_Id);
+			$query=sprintf("insert into pictures(pic_name,References_ref_id) values('%s',%d)",pg_escape_string($file),$ref_Id);
 			pg_query($con,$query);
 		}
 		$textfile=md5(uniqid()).".txt";
@@ -33,7 +33,7 @@ if(isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 				}
 			}
 		}
-		$querys=sprintf("update ref set long_text='%s' where ref_id='%d'",pg_real_escape_string($textfile),$ref_Id);
+		$querys=sprintf("update ref set long_text='%s' where ref_id='%d'",pg_escape_string($textfile),$ref_Id);
 		pg_query($con,$querys);
 		echo "Sikeres kép, és szöveg feltöltés!";
 	}
@@ -56,7 +56,7 @@ else if(!isset($_FILES['image']['tmp_name']) && $_POST["txt"]!=NULL)
 				}
 			}
 		}
-		$querys=sprintf("update ref set long_text='%s' where ref_id='%d'",pg_real_escape_string($textfile),$ref_Id);
+		$querys=sprintf("update ref set long_text='%s' where ref_id='%d'",pg_escape_string($textfile),$ref_Id);
 		pg_query($con,$querys);
 		echo "Sikeres szöveg feltöltés!";
 	}
@@ -71,7 +71,7 @@ else if(isset($_FILES['image']['tmp_name']))
 			$file=md5(uniqid(rand(), true)).".".$file_extension;
 			$targetPath = "Uploads/".$file;
 			move_uploaded_file($sourcePath,$targetPath);
-			$query=sprintf("insert into pictures(pic_name,references_ref_id) values('%s',%d)",pg_real_escape_string($file),$ref_Id);
+			$query=sprintf("insert into pictures(pic_name,References_ref_id) values('%s',%d)",pg_escape_string($file),$ref_Id);
 			pg_query($con,$query);
 		}
 		echo "Sikeres képfeltöltés!";

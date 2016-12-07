@@ -1,7 +1,7 @@
 <?php
 	$data=array();
 	include('connection_database.php');
-	$query=sprintf('select * from users where "Id"=%d',$_POST['Id']);
+	$query=sprintf('select * from user where Id=%d',$_POST['Id']);
 	$res=pg_query($con,$query);
 	$result=pg_fetch_array($res);
 	$data['firstn']=$result['firstname'];

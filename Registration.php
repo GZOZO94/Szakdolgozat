@@ -180,6 +180,21 @@
          var file;
       
          myApp.service('fileUpload', ['$http',function ($http) {
+			this.check=function(scope,event){
+				var imagefile = file.type;
+				var match= ["image/jpeg","image/png","image/jpg"];
+				if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+				{
+					alert("Nem megfelelő formátum!");
+					scope.picture='Pictures/Profile.jpg';
+					file=0;
+					return false;
+				}
+				else
+				{
+					scope.picture = event.target.result;
+				}
+			};
             this.uploadFileToUrl = function(data,file, uploadUrl,scope){
                var fd = new FormData();
 			   for(x in data)
@@ -232,7 +247,12 @@
 						if (result.error.email)
 								scope.email=result.error.email; 
 						else
-							scope.mail=false;
+						{
+							if (result.error.email_format)
+								scope.email=result.error.email_format; 
+							else
+								scope.email=false;
+						}
 						if (result.error.psw)
 								scope.psw=result.error.psw; 
 						else
@@ -300,9 +320,7 @@
 				var reader = new FileReader();
 				reader.onload = function(event)
 				{
-					 $scope.$apply(function() {
-						  $scope.picture = event.target.result;
-					  });
+					$scope.$apply(fileUpload.check($scope,event));
 				};
 				reader.readAsDataURL(e.files[0]);
 			};
@@ -312,7 +330,7 @@
                fileUpload.uploadFileToUrl(data,file, uploadUrl,$scope);
             };
          }]);
-		myApp.directive('droptarget',function(){
+		myApp.directive('droptarget',function(fileUpload){
 			return function($scope,$elem){
 				$elem.on('dragover', function (e) {
 					e.preventDefault();
@@ -329,9 +347,7 @@
 					var reader = new FileReader();
 					reader.onload = function(event)
 					{
-						 $scope.$apply(function() {
-							  $scope.picture = event.target.result;
-						  });
+						$scope.$apply(fileUpload.check($scope,event));
 					};
 					reader.readAsDataURL(file);
 				});

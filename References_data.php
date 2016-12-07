@@ -1,7 +1,6 @@
 ﻿<?php 
 	$ref_id=$_GET['ref_Id'];
 	include('user_identification.php');
-	$_SESSION["ref_Id"]=$ref_id;
 ?>
 
 <!DOCTYPE HTML>
@@ -80,7 +79,6 @@
 		{
 		echo
 		"<div class='row well'>
-			<button type='button' class='close' id='refresh'>&circlearrowright;</button>
 			<form id='ref_data' action='upload.php?ref_Id=".$ref_id."' method='post' enctype='multipart/form-data'> 
 				<div class='col-sm-4 text-center drop'>
 					<div class='upload_image_multi'>
@@ -117,7 +115,11 @@
 		<p>Copyright &copy; The future software 2016</p>
 	</div>
 	<script>
-		function checktype(file,isload){
+	function percent_show(val,percent){
+		percent.width(val)
+		percent.html(val);
+	};
+	function checktype(file,isload){
 			var match= ["image/jpeg","image/png","image/jpg"];
 			for( var i=0; i<file.length; i++)
 			{
@@ -170,25 +172,16 @@
 		return false;
 	};
 		$(document).ready(function(){
-			var file=new Array(); //Tömb a képek tárolására
-			var files; //A feltöltött képek File típusú tömbje
+			var file=new Array(); 
+			var files; 
 			var view=0;
 			var pic_num=0;
 			var percent = $('.percent');
 			var geturl='ref_pictures_database.php';
-			var sendurl='References_subscription.php';
 			var showid='#data';
-			var ref_id=<?php echo $_SESSION['ref_Id']?>;
-			
+			var ref_id=<?php echo $ref_id?>;
+			var sendurl='References_subscription.php?ref_id='+ref_id;
 			get(ref_id,geturl,sendurl,showid);
-			$("#refresh").on('click',function(){
-				$('#txt').val("");
-				$('#preview').html("<img id='image' src='Pictures/pic.jpg' class='img-thumbnail img-responsive' style=' width: 350px; height: 350px' />");
-				file=[];
-				percentVal = '0%';
-				percent.width(percentVal)
-				percent.html(percentVal);
-			});
 			$('.upload_image_multi').on('dragover',function(){
 				$(this).addClass('drag_over');
 				return false;
@@ -200,9 +193,7 @@
 			});
 			$('.upload_image_multi').on('drop', function(event){
 				file=[];
-				percentVal = '0%';
-				percent.width(percentVal)
-				percent.html(percentVal);
+				percent_show('0%',percent);
 				event.preventDefault();
 				view=0;
 				pic_num=0;
@@ -233,28 +224,23 @@
 							formData.append('image[]',file[i]);
 						}
 					}
+				console.log(file);
 				$.ajax({
-					url: 'upload.php',
+					url: 'upload.php?ref_Id='+ref_id,
 					type: 'POST',
 					data: formData,
 					contentType: false,       
 					cache: false,            
 					processData:false,
 					success: function(data){
+						percent_show('100%',percent);
 						get(ref_id,geturl,sendurl,showid);
-						var percentVal = '100%';
-						percent.width(percentVal)
-						percent.html(percentVal);
 					},
 					beforeSend: function() {
-					var percentVal = '0%';
-					percent.width(percentVal)
-					percent.html(percentVal);
+					percent_show('0%',percent);
 					},
 					uploadProgress: function(event, position, total, percentComplete) {
-						var percentVal = percentComplete + '%';
-						percent.width(percentVal)
-						percent.html(percentVal);
+						percent_show(percentComplete + '%',percent);
 					}
 				});
 				$('#txt').val("");
@@ -266,9 +252,7 @@
 				file=[];
 				view=0;
 				pic_num=0;
-				percentVal = '0%';
-				percent.width(percentVal)
-				percent.html(percentVal);
+				percent_show('0%',percent);
 				files=this.files;
 				for(var i=0; i<files.length; ++i)
 				{

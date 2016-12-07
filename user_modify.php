@@ -10,21 +10,32 @@ if(isset($_POST['Id']))
 	{
 			if(isset($_FILES["file"]["type"]))
 			{
+				$validextensions = array("jpeg", "jpg", "png",'JPG','PNG','JPEG'); 
 				$temporary = explode(".", $_FILES["file"]["name"]);
 				$file_extension = end($temporary);
-				$sourcePath = $_FILES['file']['tmp_name']; 
-				$file=md5(uniqid()).".".$file_extension;
-				$targetPath = "Profile/".$file; 
-				move_uploaded_file($sourcePath,$targetPath);
-				$query=sprintf("update users set profile_pic='%s' where \"Id\"=%d",pg_escape_string($file),$_POST['Id']);
-				pg_query($con,$query);	
-				$filename=$result["profile_pic"];
-				if($filename!='Profile.jpg')
+				if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions))
 				{
-					unlink('Profile/'.$filename);
-					
+					if ($_FILES["file"]["error"] > 0)
+					{
+						echo "Return Code: " . $_FILES["file"]["error"] . "<br/><br/>";
+					}
+					else
+					{
+						$sourcePath = $_FILES['file']['tmp_name']; 
+						$file=md5(uniqid()).".".$file_extension;
+						$targetPath = "Profile/".$file; 
+						move_uploaded_file($sourcePath,$targetPath);
+						$query=sprintf("update users set profile_pic='%s' where \"Id\"=%d",pg_escape_string($file),$_POST['Id']);
+						pg_query($con,$query);	
+						$filename=$result["profile_pic"];
+						if($filename!='Profile.jpg')
+						{
+							unlink('Profile/'.$filename);
+							
+						}
+						$data['pic']=$file;
+					}
 				}
-				$data['pic']=$file;
 			}
 			if(isset($_POST['firstname']) && $_POST['firstname']!=NULL)
 			{
@@ -41,7 +52,7 @@ if(isset($_POST['Id']))
 			if(isset($_POST['username']) && $_POST['username']!=NULL)
 			{
 				$eye=0;
-				$result2=pg_query($con,"select * from user");
+				$result2=pg_query($con,"select * from users");
 				while($result3=pg_fetch_array($result2))
 				{
 					if($result3['user_name']==$_POST['username'] && $_POST['Id']!=$result3['Id'])

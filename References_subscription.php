@@ -57,7 +57,7 @@ $(document).ready(function(){
 	var geturl='references_data_database.php';
 	var sendurl='references_data_texts.php';
 	var showid='#texts';
-	var ref_id=<?php echo $_SESSION["ref_Id"];?>;
+	var ref_id=<?php echo $_GET["ref_id"];?>;
 	console.log(ref_id);
 	get(ref_id,geturl,sendurl,showid);
 });

@@ -92,7 +92,7 @@ $(document).ready(function(){
 			cache: false,            
 			processData:false,
 			success: function(data){
-				getdata_modify(id,geturl,sendurl,showid);
+				getdata(geturl,sendurl,showid);
 			}
 		});
 	});
@@ -103,7 +103,7 @@ $(document).ready(function(){
 			sendurl='ref_modify.php';
 			showid='#select';
 			id=id.substr(0,id.indexOf(' '));
-				getdata_modify(id,geturl,sendurl,showid);
+			getdata_modify(id,geturl,sendurl,showid);
 			$('#modify').modal();
 			formData.append('Id',id);
 			$.ajax({

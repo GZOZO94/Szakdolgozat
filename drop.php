@@ -1,13 +1,16 @@
 <?php	
 	session_start();
-	$Id=$_SESSION["Id"];
+	if(isset($_SESSION['Id']))
+			$Id=$_SESSION['Id'];
+		else
+			$Id=$_COOKIE["Id"]; 
 	$file='pic.jpg';
 	if(isset($_FILES["file"]["type"]))
 		{
-			$validextensions = array("jpeg", "jpg", "png",'JPG','PNG','JPEG'); //A támogatott formátumok
+			$validextensions = array("jpeg", "jpg", "png",'JPG','PNG','JPEG'); 
 			$temporary = explode(".", $_FILES["file"]["name"]);
-			$file_extension = end($temporary);//A fájlformátum
-			if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) //Ha megfelel az adott fájl fájlformátuma
+			$file_extension = end($temporary);
+			if ((($_FILES["file"]["type"] == "image/png") || ($_FILES["file"]["type"] == "image/jpg") || ($_FILES["file"]["type"] == "image/jpeg")) && in_array($file_extension, $validextensions)) 
 				{
 					if ($_FILES["file"]["error"] > 0)
 					{
@@ -22,12 +25,12 @@
 					}
 				}
 		}
-		include('connection_database.php');//Kapcsolódás az adatbázishoz
-		if(isset($_POST["title"]) && isset($_POST["txt"])) //A cím, és a rövid leírás megadása kötelezõ
+		include('connection_database.php');
+		if(isset($_POST["title"]) && isset($_POST["txt"])) 
 		{
 			$title=$_POST["title"];
 			$txt=$_POST["txt"];
-			$query=sprintf("insert into ref(text,user_id,title,prof_picture) value('%s',%d,'%s','%s')",pg_real_escape_string($txt),$Id,$title,pg_real_escape_string($file));
+			$query=sprintf("insert into ref(text,User_Id,title,prof_picture) values('%s',%d,'%s','%s')",pg_escape_string($txt),$Id,$title,pg_escape_string($file));
 			pg_query($con,$query);
 		}
 ?>

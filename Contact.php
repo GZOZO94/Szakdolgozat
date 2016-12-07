@@ -1,5 +1,5 @@
 ﻿<?php 
-	include('user_identification.php'); /*A felhasználó azonosítása*/
+	include('user_identification.php'); 
 ?>
 <!DOCTYPE HTML>
 <html lang="hu">
@@ -82,7 +82,7 @@
 			<blockquote class="connection">
 			<h3 class="well well-sm">Telefonszám</h3>
 			<p class="well well-sm">
-				Mobil: 06209259186
+				Mobil: 06209259243
 			</p>
 			</blockquote>
 			<blockquote class="connection">

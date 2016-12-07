@@ -1,9 +1,12 @@
 ﻿<?php 
 	session_start();
 	$eye=0;
-	if(isset($_SESSION["Id"]))
+	if(isset($_COOKIE["Id"]) || isset($_SESSION['Id']))
 	{
-		$Id=$_SESSION["Id"];
+		if(isset($_SESSION['Id']))
+			$Id=$_SESSION['Id'];
+		else
+			$Id=$_COOKIE["Id"]; 
 		$eye=1;
 	}
 	else
@@ -140,7 +143,6 @@
                   headers: {'Content-Type': undefined}
                })
                .success(function(data){
-					console.log(data);
 					scope.user=data;
 					if(data.message=="" || data.message==0)
 					{
@@ -164,8 +166,7 @@
                $http.post(Url, fd, {
                   transformRequest: angular.identity,
                   headers: {'Content-Type': undefined}
-               })
-			   .success(function(data){
+               }).success(function(data){
 					if(data.error.length==0 && counter==1)
 						scope.res="Sikeres modosítás";
 					else if(data.error.date)
@@ -191,6 +192,22 @@
 					  location.href ='Logout.php';
 			   });
 			};
+			this.check=function(scope,event){
+				var imagefile = file.type;
+				var match= ["image/jpeg","image/png","image/jpg"];
+				if(!((imagefile==match[0]) || (imagefile==match[1]) || (imagefile==match[2])))
+				{
+					alert("Nem megfelelő formátum!");
+					file=0;
+					counter=0;
+					return false;
+				}
+				else
+				{
+					scope.user.picture = event.target.result;
+					scope.path="";
+				}
+			}
          }]);
 		myApp.controller('myCont',function($scope,getdata,senddata){
 			$scope.user={};
@@ -229,7 +246,7 @@
 				$scope.user.message="";
 				$scope.notice=false;
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
-			};
+			}
 			$scope.send=function(){
 				senddata.data(Id,$scope.user,sendUrl,getdata,$scope,file,counter);
 				counter=0;
@@ -240,10 +257,7 @@
 				var reader = new FileReader();
 				reader.onload = function(event)
 				{
-					 $scope.$apply(function() {
-						  $scope.user.picture = event.target.result;
-						  $scope.path="";
-					  });
+					$scope.$apply(senddata.check($scope,event));
 				};
 				reader.readAsDataURL(e.files[0]);
 			};

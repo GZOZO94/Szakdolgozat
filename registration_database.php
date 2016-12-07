@@ -58,6 +58,10 @@
 							{
 								$error['date_format']="Helytelen dátum formátum!";
 							}
+							else if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+							{
+								$error['email_format']="Helytelen email formátum!";
+							}
 							else
 							{
 								if(isset($_FILES["file"]["type"]))

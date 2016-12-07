@@ -1,7 +1,7 @@
 <?php
 	session_start();
-	unset($_SESSION["Id"]);
-	unset($_SESSION["ref_Id"]);
+	setcookie("Id", "", time()-3600);
+	unset($_SESSION['Id']);
 	unset($_SESSION["priority"]);
 	header("Location:index.php");
 ?>
