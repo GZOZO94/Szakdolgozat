@@ -5,7 +5,7 @@ if (session_status() == PHP_SESSION_NONE)
 	}
 $data=array();
 include('connection_database.php');
-$res=pg_query($con,"select * from user"); 
+$res=pg_query($con,"select * from users"); 
 while($result=pg_fetch_array($res))
 {
 	if(((isset($_COOKIE["Id"]) && $_COOKIE["Id"]!=$result["Id"]) || (isset($_SESSION["Id"]) && $_SESSION["Id"]!=$result["Id"])) && isset($_SESSION["priority"]) && $_SESSION["priority"]==1)
