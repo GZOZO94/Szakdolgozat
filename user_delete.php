@@ -25,7 +25,7 @@ if(isset($_POST['Id']))
 					$filename=$result2["long_text"];
 					unlink('Texts/'.$filename);
 				}
-				$filename=$result3["prof_picture"];
+				$filename=$result2["prof_picture"];
 				if($filename!='pic.jpg')
 					unlink('Uploads/'.$filename);
 				$query=sprintf("delete from ref where ref_id=%d",$result2['ref_id']);
