@@ -173,14 +173,17 @@
 					{
 						scope.res="Hiba történt: "+data.error.date+". A dátum nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
+						scope.path='Profile/';
 					}
 					else if(data.error.phone){
 						scope.res="Hiba történt: "+data.error.phone+". A telefonszám nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
+						scope.path='Profile/';
 					}
 					else if(data.error.email){
 						scope.res="Hiba történt: "+data.error.email+". Az email cím nem került modosításra!";
 						getdata.data(Id,'profile_data.php',scope);
+						scope.path='Profile/';
 					}
 					else
 						scope.res=false;
