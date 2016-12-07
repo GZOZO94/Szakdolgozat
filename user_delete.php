@@ -36,7 +36,7 @@ if(isset($_POST['Id']))
 				$filename=$result["profile_pic"];
 				unlink('Profile/'.$filename);
 			}
-			$query=sprintf("delete from user where \"Id\"=%d",$_POST['Id']);
+			$query=sprintf("delete from users where \"Id\"=%d",$_POST['Id']);
 			pg_query($con,$query);
 	}
 }
